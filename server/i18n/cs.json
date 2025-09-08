@@ -10778,5 +10778,13 @@
     {
         "id": "model.config.is_valid.notification_settings.reviewer_flagged_notification_disabled",
         "translation": "Upozornění na nový označený příspěvek nelze pro recenzenty zakázat."
+    },
+    {
+        "id": "api.upload.invalid_type_for_shared_channel.app_error",
+        "translation": "Nepodařilo se nahrát soubor. Nahrávací kanál není sdílený s vzdáleným účastníkem."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Neplatné ID kanálu."
     }
 ]
