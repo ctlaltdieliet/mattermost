@@ -10627,5 +10627,157 @@
     {
         "id": "web.incoming_webhook.parse_multipart.app_error",
         "translation": "Nem sikerült elemezni a webhook {{.hook_id}} többrészes űrlapját."
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.disabled.error",
+        "translation": "A vendég fiókok tiltva vannak"
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.license.error",
+        "translation": "Az Ön licence nem támogatja a vendég fiókokat"
+    },
+    {
+        "id": "api.team.user.missing_account",
+        "translation": "Nem sikerült megtalálni a felhasználót."
+    },
+    {
+        "id": "api.templates.ip_filters_changed_footer.contact_support",
+        "translation": "Kapcsolatfelvétel a támogatással"
+    },
+    {
+        "id": "api.templates.license_up_for_renewal_contact_sales",
+        "translation": "Kapcsolatba lépés az értékesítéssel"
+    },
+    {
+        "id": "api.upload.create.upload_too_large.app_error",
+        "translation": "Fájl feltöltés nem lehetséges. A fájl túl nagy."
+    },
+    {
+        "id": "app.bot.update.app_error",
+        "translation": "Nem sikerült frissíteni a botot."
+    },
+    {
+        "id": "app.draft.feature_disabled",
+        "translation": "Tervezetek szolgáltatás le van tiltva."
+    },
+    {
+        "id": "app.eport.generate_presigned_url.fileexist.app_error",
+        "translation": "Nem lehet ellenőrizni, hogy a fájl létezik-e."
+    },
+    {
+        "id": "app.post.delete_post.get_team.app_error",
+        "translation": "Hiba történt a csapat lekérésekor."
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "Ön nem rendelkezik a megfelelő jogosultságokkal."
+    },
+    {
+        "id": "app.report.send_report_to_user.failed_to_save",
+        "translation": "Nem sikerült menteni a fájl infót."
+    },
+    {
+        "id": "app.scheduled_post.private_channel",
+        "translation": "Privát csatorna"
+    },
+    {
+        "id": "app.scheduled_post.unknown_channel",
+        "translation": "Ismeretlen csatorna"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Érvénytelen csatorna azonosító."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.post_id.app_error",
+        "translation": "Érvénytelen bejegyzés azonosító."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.user_id.app_error",
+        "translation": "Érvénytelen felhasználó azonosító."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.channel_id.app_error",
+        "translation": "Érvénytelen csatorna azonosító."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.create_at.app_error",
+        "translation": "A létrehozás idejének érvényes időnek kell lennie."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.id.app_error",
+        "translation": "Érvénytelen azonosító."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.original_id.app_error",
+        "translation": "Érvénytelen eredeti azonosító."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.type.app_error",
+        "translation": "Érvénytelen típus."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.update_at.app_error",
+        "translation": "A frissítés idejének érvényes időnek kell lennie."
+    },
+    {
+        "id": "model.draft.is_valid.channel_id.app_error",
+        "translation": "Érvénytelen csatorna azonosító."
+    },
+    {
+        "id": "model.draft.is_valid.create_at.app_error",
+        "translation": "A létrehozás idejének érvényes időnek kell lennie."
+    },
+    {
+        "id": "model.draft.is_valid.props.app_error",
+        "translation": "Érvénytelen tulajdonságok."
+    },
+    {
+        "id": "model.draft.is_valid.root_id.app_error",
+        "translation": "Érvénytelen gyökér azonosító."
+    },
+    {
+        "id": "model.draft.is_valid.update_at.app_error",
+        "translation": "A frissítés idejének érvényes időnek kell lennie."
+    },
+    {
+        "id": "model.draft.is_valid.user_id.app_error",
+        "translation": "Érvénytelen felhasználó azonosító."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_id.error",
+        "translation": "Érvénytelen felhasználó azonosító."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_secret.error",
+        "translation": "Érvénytelen kliens titok."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.create_at.error",
+        "translation": "A létrehozás idejének érvényes időnek kell lennie."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.creator_id.error",
+        "translation": "Érvénytelen létrehozó azonosító."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.id.error",
+        "translation": "Érvénytelen azonosító."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.name.error",
+        "translation": "Érvénytelen név."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.update_at.error",
+        "translation": "A frissítés idejének érvényes időnek kell lennie."
+    },
+    {
+        "id": "model.post.is_valid.message_length.app_error",
+        "translation": "Bejegyzés Message tulajdonsága hosszabb mint a maximálisan megengedett hosszúság."
+    },
+    {
+        "id": "model.remote_cluster_invite.is_valid.token.app_error",
+        "translation": "Érvénytelen token."
     }
 ]
