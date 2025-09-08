@@ -10782,5 +10782,9 @@
     {
         "id": "model.config.is_valid.notification_settings.reviewer_flagged_notification_disabled",
         "translation": "Рецензентам не можна вимкнути сповіщення про нові позначені дописи."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Неправильний ідентифікатор каналу."
     }
 ]
