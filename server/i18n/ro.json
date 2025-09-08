@@ -10626,5 +10626,161 @@
     {
         "id": "web.incoming_webhook.parse_multipart.app_error",
         "translation": "Nu s-a reușit analizarea formularului multipartit pentru webhook {{.hook_id}}."
+    },
+    {
+        "id": "api.email_batching.send_batched_email_notification.button",
+        "translation": "Deschideți Mattermost"
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.disabled.error",
+        "translation": "Conturile oaspeților sunt dezactivate"
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.license.error",
+        "translation": "Licența dvs. nu acceptă conturile de invitați"
+    },
+    {
+        "id": "api.team.user.missing_account",
+        "translation": "Imposibil de găsit utilizatorul."
+    },
+    {
+        "id": "api.templates.ip_filters_changed_footer.contact_support",
+        "translation": "Contact Support"
+    },
+    {
+        "id": "api.templates.license_up_for_renewal_contact_sales",
+        "translation": "Contactați vânzări"
+    },
+    {
+        "id": "api.upload.create.upload_too_large.app_error",
+        "translation": "Imposibil de încărcat fișierul. Fișierul este prea mare."
+    },
+    {
+        "id": "app.bot.update.app_error",
+        "translation": "Imposibil de actualizat botul."
+    },
+    {
+        "id": "app.eport.generate_presigned_url.fileexist.app_error",
+        "translation": "Nu se poate verifica dacă fișierul există."
+    },
+    {
+        "id": "app.post.delete_post.get_team.app_error",
+        "translation": "Eroare la obtinerea echipa."
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "Nu aveți permisiunile corespunzătoare."
+    },
+    {
+        "id": "app.report.send_report_to_user.failed_to_save",
+        "translation": "Salvarea informațiilor despre fișier nu a reușit."
+    },
+    {
+        "id": "app.scheduled_post.private_channel",
+        "translation": "canal privat"
+    },
+    {
+        "id": "app.system.system_bot.bot_displayname",
+        "translation": "Sistem"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Cod de identificare invalid."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.post_id.app_error",
+        "translation": "ID post incorect."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.user_id.app_error",
+        "translation": "Utilizator invalid."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.channel_id.app_error",
+        "translation": "Cod de identificare invalid."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.create_at.app_error",
+        "translation": "Creați la trebuie să fie un timp valabil."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.id.app_error",
+        "translation": "ID Incorect."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.original_id.app_error",
+        "translation": "Identitatea originala invalidă."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.type.app_error",
+        "translation": "Tip invalid."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.update_at.app_error",
+        "translation": "Actualizați la trebuie să fie un timp valabil."
+    },
+    {
+        "id": "model.draft.is_valid.channel_id.app_error",
+        "translation": "Cod de identificare invalid."
+    },
+    {
+        "id": "model.draft.is_valid.create_at.app_error",
+        "translation": "Creați la trebuie să fie un timp valabil."
+    },
+    {
+        "id": "model.draft.is_valid.props.app_error",
+        "translation": "Recuzită invalidă."
+    },
+    {
+        "id": "model.draft.is_valid.root_id.app_error",
+        "translation": "Identitatea root invalidă."
+    },
+    {
+        "id": "model.draft.is_valid.update_at.app_error",
+        "translation": "Actualizați la trebuie să fie un timp valabil."
+    },
+    {
+        "id": "model.draft.is_valid.user_id.app_error",
+        "translation": "Utilizator invalid."
+    },
+    {
+        "id": "model.group.name.reserved_name.app_error",
+        "translation": "numele grupului există deja ca nume rezervat"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_id.error",
+        "translation": "Id-ul de client invalid."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_secret.error",
+        "translation": "Secretul client invalidă."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.create_at.error",
+        "translation": "Creați la trebuie să fie un timp valabil."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.creator_id.error",
+        "translation": "Identitatea creatorului invalidă."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.id.error",
+        "translation": "ID incorect."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.name.error",
+        "translation": "Nume invalid."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.update_at.error",
+        "translation": "Actualizați la trebuie să fie un timp valabil."
+    },
+    {
+        "id": "model.post.is_valid.message_length.app_error",
+        "translation": "Post mesaj proprietate este mai mare valoarea maximă permisă de lungime."
+    },
+    {
+        "id": "model.remote_cluster_invite.is_valid.token.app_error",
+        "translation": "Token invalid."
     }
 ]
