@@ -10642,5 +10642,149 @@
     {
         "id": "web.incoming_webhook.parse_multipart.app_error",
         "translation": "No se ha podido analizar el formulario multiparte del webhook {{.hook_id}}."
+    },
+    {
+        "id": "api.templates.ip_filters_changed_footer.contact_support",
+        "translation": "Contactar a Soporte"
+    },
+    {
+        "id": "api.templates.license_up_for_renewal_contact_sales",
+        "translation": "Contacta al equipo de ventas"
+    },
+    {
+        "id": "app.bot.update.app_error",
+        "translation": "No se puede actualizar el bot."
+    },
+    {
+        "id": "app.draft.feature_disabled",
+        "translation": "La función de borradores está deshabilitada."
+    },
+    {
+        "id": "app.eport.generate_presigned_url.fileexist.app_error",
+        "translation": "No se puede comprobar si el archivo existe."
+    },
+    {
+        "id": "app.post.delete_post.get_team.app_error",
+        "translation": "Ocurrió un error al obtener el equipo."
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "No tienes los permisos apropiados."
+    },
+    {
+        "id": "app.report.send_report_to_user.failed_to_save",
+        "translation": "No se pudo guardar la información del archivo."
+    },
+    {
+        "id": "app.scheduled_post.private_channel",
+        "translation": "Canal privado"
+    },
+    {
+        "id": "app.scheduled_post.unknown_channel",
+        "translation": "Canal desconocido"
+    },
+    {
+        "id": "ent.outgoing_oauth_connections.delete_connection.app_error",
+        "translation": "Se produjo un error al eliminar la conexión OAuth saliente."
+    },
+    {
+        "id": "ent.outgoing_oauth_connections.feature_disabled",
+        "translation": "Las conexiones OAuth salientes no están disponibles en este servidor."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Channel id inválido."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.post_id.app_error",
+        "translation": "Id del mensaje no es válido."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.user_id.app_error",
+        "translation": "Id de usuario no válido."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.channel_id.app_error",
+        "translation": "Channel id inválido."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.create_at.app_error",
+        "translation": "Create debe ser un tiempo válido."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.id.app_error",
+        "translation": "Id inválido."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.original_id.app_error",
+        "translation": "Id Original inválido."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.type.app_error",
+        "translation": "Tipo inválido."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.update_at.app_error",
+        "translation": "Update debe ser un tiempo válido."
+    },
+    {
+        "id": "model.draft.is_valid.channel_id.app_error",
+        "translation": "Channel id inválido."
+    },
+    {
+        "id": "model.draft.is_valid.create_at.app_error",
+        "translation": "Create debe ser un tiempo válido."
+    },
+    {
+        "id": "model.draft.is_valid.props.app_error",
+        "translation": "Props invalidos."
+    },
+    {
+        "id": "model.draft.is_valid.root_id.app_error",
+        "translation": "Id de la raíz no es válido."
+    },
+    {
+        "id": "model.draft.is_valid.update_at.app_error",
+        "translation": "Update debe ser un tiempo válido."
+    },
+    {
+        "id": "model.draft.is_valid.user_id.app_error",
+        "translation": "Id de usuario no válido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_id.error",
+        "translation": "Id de cliente inválido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_secret.error",
+        "translation": "Llave secreta del Cliente no es válida."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.create_at.error",
+        "translation": "Create debe ser un tiempo válido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.creator_id.error",
+        "translation": "Id del creador inválido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.id.error",
+        "translation": "Id inválido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.name.error",
+        "translation": "Nombre inválido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.update_at.error",
+        "translation": "Update debe ser un tiempo válido."
+    },
+    {
+        "id": "model.post.is_valid.message_length.app_error",
+        "translation": "La propiedad Message del mensaje supera la longitud máxima permitida."
+    },
+    {
+        "id": "model.remote_cluster_invite.is_valid.token.app_error",
+        "translation": "Token no válido."
     }
 ]
