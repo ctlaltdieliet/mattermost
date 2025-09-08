@@ -10611,5 +10611,173 @@
     {
         "id": "web.incoming_webhook.user.app_error",
         "translation": "Fant ikke brukeren {{.user}}"
+    },
+    {
+        "id": "api.channel.bookmark.create_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Kunne ikke opprette kanalbokmerket."
+    },
+    {
+        "id": "api.channel.bookmark.delete_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Kunne ikke slette kanalbokmerket."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Kunne ikke oppdatere kanalbokmerket."
+    },
+    {
+        "id": "api.channel.get_channel_moderations.license.error",
+        "translation": "Lisensen din støtter ikke moderering av kanaler"
+    },
+    {
+        "id": "api.channel.restore_channel.unarchived",
+        "translation": "{username} opphevde arkiveringen av kanalen."
+    },
+    {
+        "id": "api.command_channel_purpose.channel.app_error",
+        "translation": "Feil ved henting av gjeldende kanal."
+    },
+    {
+        "id": "api.command_channel_purpose.hint",
+        "translation": "[tekst]"
+    },
+    {
+        "id": "api.command_channel_rename.channel.app_error",
+        "translation": "Feil ved henting av gjeldende kanal."
+    },
+    {
+        "id": "api.command_channel_rename.hint",
+        "translation": "[tekst]"
+    },
+    {
+        "id": "api.command_code.hint",
+        "translation": "[tekst]"
+    },
+    {
+        "id": "api.command_code.name",
+        "translation": "kode"
+    },
+    {
+        "id": "api.command_groupmsg.name",
+        "translation": "melding"
+    },
+    {
+        "id": "api.command_help.name",
+        "translation": "hjelp"
+    },
+    {
+        "id": "api.command_invite.channel.app_error",
+        "translation": "Feil ved henting av gjeldende kanal."
+    },
+    {
+        "id": "api.command_invite.fail.app_error",
+        "translation": "Det oppstod en feil under tilkoblingen til kanalen."
+    },
+    {
+        "id": "api.command_invite.name",
+        "translation": "inviter"
+    },
+    {
+        "id": "api.command_search.hint",
+        "translation": "[tekst]"
+    },
+    {
+        "id": "api.context.permissions.app_error",
+        "translation": "Du har ikke de riktige tillatelsene."
+    },
+    {
+        "id": "api.emoji.create.too_large.app_error",
+        "translation": "Vi kunne ikke lage emoji-en. Bildet må være mindre enn 1 MB."
+    },
+    {
+        "id": "api.post.send_notifications_and_forget.push_general_message",
+        "translation": " la ut en melding"
+    },
+    {
+        "id": "api.status.user_not_found.app_error",
+        "translation": "Bruker ikke funnet"
+    },
+    {
+        "id": "api.team.invite_members.unable_to_send_email_with_defaults.app_error",
+        "translation": "SMTP er ikke konfigurert i System Console"
+    },
+    {
+        "id": "api.team.set_team_icon.too_large.app_error",
+        "translation": "Kan ikke laste opp teamikonet. Filen er for stor."
+    },
+    {
+        "id": "api.team.user.missing_account",
+        "translation": "Kan ikke finne brukeren."
+    },
+    {
+        "id": "api.templates.reset_body.button",
+        "translation": "Nullstill passord"
+    },
+    {
+        "id": "api.templates.reset_body.title",
+        "translation": "Tilbakestill ditt passord"
+    },
+    {
+        "id": "api.user.saml.not_available.app_error",
+        "translation": "SAML 2.0 er ikke konfigurert eller støttet på denne serveren."
+    },
+    {
+        "id": "api.user.update_active.permissions.app_error",
+        "translation": "Du har ikke de riktige tillatelsene."
+    },
+    {
+        "id": "api.user.upload_profile_user.too_large.app_error",
+        "translation": "Kunne ikke laste opp profilbilde. Filen er for stor."
+    },
+    {
+        "id": "app.admin.test_email.failure",
+        "translation": "Tilkobling mislyktes: {error}"
+    },
+    {
+        "id": "app.channel.permanent_delete_members_by_user.app_error",
+        "translation": "Kan ikke fjerne kanalmedlemmet."
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "Du har ikke de riktige tillatelsene."
+    },
+    {
+        "id": "app.system.system_bot.bot_displayname",
+        "translation": "System"
+    },
+    {
+        "id": "app.user.missing_account.const",
+        "translation": "Kan ikke finne brukeren."
+    },
+    {
+        "id": "ent.saml.service_disable.app_error",
+        "translation": "SAML 2.0 er ikke konfigurert eller støttet på denne serveren."
+    },
+    {
+        "id": "error",
+        "translation": "Feil"
+    },
+    {
+        "id": "model.command.is_valid.url.app_error",
+        "translation": "Ugyldig URL"
+    },
+    {
+        "id": "model.emoji.name.app_error",
+        "translation": "Navnet må bestå av 1 til 64 små alfanumeriske tegn."
+    },
+    {
+        "id": "model.group.name.invalid_length.app_error",
+        "translation": "Navnet må bestå av 1 til 64 små alfanumeriske tegn."
+    },
+    {
+        "id": "model.member.is_valid.channel.app_error",
+        "translation": "Kanalnavnet er ikke gyldig."
+    },
+    {
+        "id": "system.message.name",
+        "translation": "System"
+    },
+    {
+        "id": "web.error.unsupported_browser.system_browser_or",
+        "translation": "eller"
     }
 ]
