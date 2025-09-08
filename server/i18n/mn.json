@@ -82,5 +82,9 @@
     {
         "id": "April",
         "translation": "4-р сар"
+    },
+    {
+        "id": "api.command_logout.name",
+        "translation": "Гарах"
     }
 ]
