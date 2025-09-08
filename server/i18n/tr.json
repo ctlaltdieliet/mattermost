@@ -10774,5 +10774,13 @@
     {
         "id": "model.config.is_valid.notification_settings.reviewer_flagged_notification_disabled",
         "translation": "Yeni işaretlenmiş gönderiler için bildirimler gözden geçirenler için devre dışı bırakılamaz."
+    },
+    {
+        "id": "api.upload.invalid_type_for_shared_channel.app_error",
+        "translation": "Dosya yüklenemedi. Yükleme kanalı uzak taraf ile paylaşılmıyor."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Kanal kimliği geçersiz."
     }
 ]
