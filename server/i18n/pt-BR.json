@@ -10714,5 +10714,77 @@
     {
         "id": "web.incoming_webhook.parse_multipart.app_error",
         "translation": "Falha ao analisar o formulário de várias partes para o webhook {{.hook_id}}."
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "Você não tem a permissão apropriada."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Id de canal inválido."
+    },
+    {
+        "id": "model.channel.is_valid.banner_info.channel_type.app_error",
+        "translation": "O banner do canal só pode ser configurado em canais Públicos ou Privados."
+    },
+    {
+        "id": "model.draft.is_valid.channel_id.app_error",
+        "translation": "Id de canal inválido."
+    },
+    {
+        "id": "model.draft.is_valid.create_at.app_error",
+        "translation": "Data de criação deve ser uma data válida."
+    },
+    {
+        "id": "model.draft.is_valid.props.app_error",
+        "translation": "Props inválido."
+    },
+    {
+        "id": "model.draft.is_valid.root_id.app_error",
+        "translation": "Id raiz inválido."
+    },
+    {
+        "id": "model.group.name.reserved_name.app_error",
+        "translation": "nome do grupo já existe como um nome reservado"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_id.error",
+        "translation": "Id do cliente inválido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_secret.error",
+        "translation": "Chave secreta do cliente inválida."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.create_at.error",
+        "translation": "Data de criação deve ser uma data válida."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.creator_id.error",
+        "translation": "Id criador inválido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.id.error",
+        "translation": "Id Inválido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.name.error",
+        "translation": "Nome inválido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.update_at.error",
+        "translation": "Update deve ser um tempo válido."
+    },
+    {
+        "id": "model.post.is_valid.message_length.app_error",
+        "translation": "A propriedade Message do Post é maior que o comprimento máximo permitido."
+    },
+    {
+        "id": "model.remote_cluster_invite.is_valid.token.app_error",
+        "translation": "Token inválido."
+    },
+    {
+        "id": "model.user.pre_save.password_hash.app_error",
+        "translation": "Ocorreu um erro interno ao salvar a senha."
     }
 ]
