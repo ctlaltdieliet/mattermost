@@ -10587,5 +10587,197 @@
     {
         "id": "web.incoming_webhook.parse_multipart.app_error",
         "translation": "Webhookin {{.hook_id}} moniosaisen lomakkeen jäsentäminen epäonnistui."
+    },
+    {
+        "id": "api.channel.update_channel.update_direct_or_group_messages_not_allowed.app_error",
+        "translation": "Sinulla ei ole lupaa päivittää suorien tai ryhmäviestien nimeä, display_namea ja tarkoitusta."
+    },
+    {
+        "id": "api.command_channel_header.update_channel.max_length",
+        "translation": "Syötetty teksti ylittää merkkirajoituksen. Kanavan otsikko on rajoitettu {maxLength} merkkiin."
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.license.error",
+        "translation": "Lisenssisi ei tue vierailijatilejä"
+    },
+    {
+        "id": "api.team.user.missing_account",
+        "translation": "Ei löydetty käyttäjää."
+    },
+    {
+        "id": "api.templates.welcome_body.app_download_button",
+        "translation": "Lataa"
+    },
+    {
+        "id": "api.upload.create.upload_too_large.app_error",
+        "translation": "Tiedostoa ei voi ulosladata. Tiedosto on liian suuri."
+    },
+    {
+        "id": "app.bot.update.app_error",
+        "translation": "Ei voida päivittää viestiä"
+    },
+    {
+        "id": "app.channel.get_by_name.existing.app_error",
+        "translation": "Ei löydetty olemassaolevaa kanavaa"
+    },
+    {
+        "id": "app.command.getcommand.internal_error",
+        "translation": "Ei voitu hakea komentoa"
+    },
+    {
+        "id": "app.command_webhook.handle_command_webhook.parse",
+        "translation": "Ei voitu lukea sisääntulevaa dataa"
+    },
+    {
+        "id": "app.command_webhook.try_use.invalid",
+        "translation": "Virheellinen webhook"
+    },
+    {
+        "id": "app.post.delete_post.get_team.app_error",
+        "translation": "Joukkueen hakemisessa tapahtui virhe."
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "Sinulla ei ole tarvittavia käyttöoikeuksia."
+    },
+    {
+        "id": "app.scheduled_post.private_channel",
+        "translation": "yksityinen kanava"
+    },
+    {
+        "id": "app.scheduled_post.unknown_channel",
+        "translation": "Tuntematon kanava"
+    },
+    {
+        "id": "app.system.system_bot.bot_displayname",
+        "translation": "Järjestelmä"
+    },
+    {
+        "id": "app.upload.upload_data.large_image.app_error",
+        "translation": "{{.Filename}}:n mitat ({{.Width}} x {{.Height}} pikseliä) ylittävät rajat."
+    },
+    {
+        "id": "app.user.missing_account.const",
+        "translation": "Ei löydetty käyttäjää."
+    },
+    {
+        "id": "ent.api.post.send_notifications_and_forget.push_image_only",
+        "translation": " liitti tiedoston."
+    },
+    {
+        "id": "ent.elasticsearch.search_files.search_failed",
+        "translation": "Haku ei valmistunut"
+    },
+    {
+        "id": "ent.elasticsearch.search_files.unmarshall_file_failed",
+        "translation": "Hakutulosten dekoodaus epäonnistui"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Virheellinen kanavan id"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.post_id.app_error",
+        "translation": "Virheellinen viestin id"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.user_id.app_error",
+        "translation": "Virheellinen käyttäjä-id"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.channel_id.app_error",
+        "translation": "Virheellinen kanavan id"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.create_at.app_error",
+        "translation": "Create at arvon oltava validi aika"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.id.app_error",
+        "translation": "Virheellinen ID"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.original_id.app_error",
+        "translation": "Virheellinen alkuperäinen ID"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.type.app_error",
+        "translation": "Virheellinen type"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.update_at.app_error",
+        "translation": "Update at on oltava aika"
+    },
+    {
+        "id": "model.draft.is_valid.channel_id.app_error",
+        "translation": "Virheellinen kanavan id"
+    },
+    {
+        "id": "model.draft.is_valid.create_at.app_error",
+        "translation": "Create at arvon oltava validi aika"
+    },
+    {
+        "id": "model.draft.is_valid.props.app_error",
+        "translation": "Virheellinen props"
+    },
+    {
+        "id": "model.draft.is_valid.root_id.app_error",
+        "translation": "Virheellinen juuren ID"
+    },
+    {
+        "id": "model.draft.is_valid.update_at.app_error",
+        "translation": "Update at on oltava aika"
+    },
+    {
+        "id": "model.draft.is_valid.user_id.app_error",
+        "translation": "Virheellinen käyttäjä-id"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_id.error",
+        "translation": "Virheellinen asiakas-ID"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_secret.error",
+        "translation": "Virheellinen asiakassalaisuus"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.create_at.error",
+        "translation": "Create at arvon oltava validi aika"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.creator_id.error",
+        "translation": "Virheellinen creator-ID"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.id.error",
+        "translation": "Epäkelvollinen tunnus."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.name.error",
+        "translation": "Virheellinen name"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.update_at.error",
+        "translation": "Update at on oltava aika"
+    },
+    {
+        "id": "model.post.is_valid.message_length.app_error",
+        "translation": "Viestin Message arvo on sallittua pidempi."
+    },
+    {
+        "id": "model.reaction.is_valid.update_at.app_error",
+        "translation": "Update at on oltava aika"
+    },
+    {
+        "id": "model.remote_cluster_invite.is_valid.token.app_error",
+        "translation": "Virheellinen token."
+    },
+    {
+        "id": "model.upload_session.is_valid.id.app_error",
+        "translation": "Virheellinen id arvo."
+    },
+    {
+        "id": "model.upload_session.is_valid.path.app_error",
+        "translation": "Virheellinen path arvo."
     }
 ]
