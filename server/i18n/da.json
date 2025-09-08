@@ -10731,5 +10731,53 @@
     {
         "id": "web.incoming_webhook.user.app_error",
         "translation": "Kunne ikke finde brugeren {{.user}}"
+    },
+    {
+        "id": "api.channel.bookmark.create_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Kunne ikke lave bogmærke i kanalen."
+    },
+    {
+        "id": "api.channel.bookmark.delete_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Kunne ikke slette bogmærket i kanalen."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Kunne ikke opdatere bogmærket i kanalen."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark_sort_order.deleted_channel.forbidden.app_error",
+        "translation": "Kunne ikke opdatere sorteringsrækkefølgen af bogmærker i kanalen."
+    },
+    {
+        "id": "api.command_invite.channel.app_error",
+        "translation": "Fejl ved hentning af nuværende kanal."
+    },
+    {
+        "id": "api.command_search.hint",
+        "translation": "[tekst]"
+    },
+    {
+        "id": "api.context.permissions.app_error",
+        "translation": "Du har ikke de nødvendige tilladelser."
+    },
+    {
+        "id": "api.templates.welcome_body.app_download_button",
+        "translation": "Download"
+    },
+    {
+        "id": "api.upload.create.upload_too_large.app_error",
+        "translation": "Kan ikke uploade fil. Filen er for stor."
+    },
+    {
+        "id": "api.user.update_active.permissions.app_error",
+        "translation": "Du har ikke de nødvendige tilladelser."
+    },
+    {
+        "id": "app.draft.feature_disabled",
+        "translation": "Kladdefunktionen er deaktiveret."
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "Du har ikke de nødvendige tilladelser."
     }
 ]
