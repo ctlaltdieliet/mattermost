@@ -10563,5 +10563,221 @@
     {
         "id": "web.incoming_webhook.user.app_error",
         "translation": "Δεν μπόρεσα να βρω τον χρήστη {{.user}}"
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.disabled.error",
+        "translation": "Οι λογαριασμοί επισκεπτών είναι απενεργοποιημένοι."
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.license.error",
+        "translation": "Η άδειά σας δεν υποστηρίζει λογαριασμούς επισκεπτών"
+    },
+    {
+        "id": "api.team.user.missing_account",
+        "translation": "Δεν είναι δυνατή η εύρεση του χρήστη."
+    },
+    {
+        "id": "api.templates.welcome_body.app_download_button",
+        "translation": "Λήψη"
+    },
+    {
+        "id": "api.upload.create.upload_too_large.app_error",
+        "translation": "Αδυναμία μεταφόρτωσης του αρχείου. Το μέγεθός του είναι πολύ μεγάλο."
+    },
+    {
+        "id": "api.user.login.guest_accounts.disabled.error",
+        "translation": "Οι λογαριασμοί επισκεπτών είναι απενεργοποιημένοι."
+    },
+    {
+        "id": "api.user.login.guest_accounts.license.error",
+        "translation": "Η άδειά σας δεν υποστηρίζει λογαριασμούς επισκεπτών"
+    },
+    {
+        "id": "api.user.login_by_oauth.bot_login_forbidden.app_error",
+        "translation": "Απαγορεύεται η σύνδεση σε λογαριασμούς bot."
+    },
+    {
+        "id": "api.user.login_by_oauth.not_available.app_error",
+        "translation": "{{.Service}} Το σύστημα ενιαίας πρόσβασης (SSO) μέσω OAuth 2.0 δεν είναι διαθέσιμο σε αυτόν τον διακομιστή."
+    },
+    {
+        "id": "api.user.login_by_oauth.parse.app_error",
+        "translation": "Δεν ήταν δυνατή η ανάλυση των δεδομένων εξουσιοδότησης από τον χρήστη αντικειμένου {{.Service}}."
+    },
+    {
+        "id": "api.user.login_ldap.not_available.app_error",
+        "translation": "Το AD/LDAP δεν είναι διαθέσιμο σε αυτόν τον διακομιστή."
+    },
+    {
+        "id": "api.user.oauth_to_email.not_available.app_error",
+        "translation": "Η μεταφορά ελέγχου ταυτότητας δεν έχει ρυθμιστεί ή δεν είναι διαθέσιμη σε αυτόν τον διακομιστή."
+    },
+    {
+        "id": "api.user.update_user.accepted_domain.app_error",
+        "translation": "Το email που δώσατε δεν ανήκει σε αποδεκτό τομέα. Επικοινωνήστε με τον διαχειριστή σας ή εγγραφείτε με διαφορετικό email."
+    },
+    {
+        "id": "api.user.upload_profile_user.check_image_limits.app_error",
+        "translation": "Ο έλεγχος ορίων εικόνας απέτυχε. Η ανάλυση είναι πολύ υψηλή."
+    },
+    {
+        "id": "api.websocket_handler.server_busy.app_error",
+        "translation": "Ο διακομιστής είναι απασχολημένος, οι μη κρίσιμες υπηρεσίες δεν είναι προσωρινά διαθέσιμες."
+    },
+    {
+        "id": "app.bot.update.app_error",
+        "translation": "Αδυναμία ενημέρωσης του bot."
+    },
+    {
+        "id": "app.channel.get_by_name.existing.app_error",
+        "translation": "Δεν είναι δυνατή η εύρεση του υπάρχοντος καναλιού."
+    },
+    {
+        "id": "app.command.getcommand.internal_error",
+        "translation": "Δεν είναι δυνατή η λήψη της εντολής."
+    },
+    {
+        "id": "app.notification.body.dm.time",
+        "translation": "{{.Hour}}:{{.Minute}} {{.TimeZone}}"
+    },
+    {
+        "id": "app.post.delete_post.get_team.app_error",
+        "translation": "Παρουσιάστηκε σφάλμα κατά τη λήψη της ομάδας."
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "Δεν έχετε τα κατάλληλα δικαιώματα."
+    },
+    {
+        "id": "app.system.system_bot.bot_displayname",
+        "translation": "Σύστημα"
+    },
+    {
+        "id": "app.upload.get.app_error",
+        "translation": "Αποτυχία λήψης."
+    },
+    {
+        "id": "app.upload.upload_data.large_image.app_error",
+        "translation": "Οι διαστάσεις του {{.Filename}} ({{.Width}} επί {{.Height}} pixels) υπερβαίνουν τα όρια."
+    },
+    {
+        "id": "app.user.missing_account.const",
+        "translation": "Δεν είναι δυνατή η εύρεση του χρήστη."
+    },
+    {
+        "id": "brand.save_brand_image.check_image_limits.app_error",
+        "translation": "Ο έλεγχος ορίων εικόνας απέτυχε. Η ανάλυση είναι πολύ υψηλή."
+    },
+    {
+        "id": "ent.api.post.send_notifications_and_forget.push_image_only",
+        "translation": " επισύναψε ένα αρχείο."
+    },
+    {
+        "id": "error",
+        "translation": "Σφάλμα"
+    },
+    {
+        "id": "mfa.activate.bad_token.app_error",
+        "translation": "Μη έγκυρο διακριτικό ελέγχου ταυτότητας πολλών παραγόντων (MFA)."
+    },
+    {
+        "id": "mfa.validate_token.authenticate.app_error",
+        "translation": "Μη έγκυρο διακριτικό ελέγχου ταυτότητας πολλών παραγόντων (MFA)."
+    },
+    {
+        "id": "model.access.is_valid.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.authorize.is_valid.state.app_error",
+        "translation": "Μη έγκυρη κατάσταση"
+    },
+    {
+        "id": "model.authorize.is_valid.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.bot.is_valid.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.bot.is_valid.username.app_error",
+        "translation": "Μη έγκυρο όνομα χρήστη."
+    },
+    {
+        "id": "model.channel_member.is_valid.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.command.is_valid.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.command_hook.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.config.is_valid.file_driver.app_error",
+        "translation": "Μη έγκυρο όνομα προγράμματος οδήγησης για τις ρυθμίσεις αρχείου. Πρέπει να είναι είτε 'local' ή 'amazons3'."
+    },
+    {
+        "id": "model.draft.is_valid.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.group.name.reserved_name.app_error",
+        "translation": "το όνομα του γκρουπ υπάρχει ήδη ως δεσμευμένο όνομα"
+    },
+    {
+        "id": "model.incoming_hook.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.incoming_hook.username.app_error",
+        "translation": "Μη έγκυρο όνομα χρήστη."
+    },
+    {
+        "id": "model.outgoing_hook.is_valid.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.outgoing_hook.username.app_error",
+        "translation": "Μη έγκυρο όνομα χρήστη."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.id.error",
+        "translation": "Μη έγκυρο αναγνωριστικό."
+    },
+    {
+        "id": "model.post.is_valid.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.preference.is_valid.id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.reaction.is_valid.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.team_member.is_valid.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.user.is_valid.id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "model.user_access_token.is_valid.user_id.app_error",
+        "translation": "Μη έγκυρο αναγνωριστικό χρήστη."
+    },
+    {
+        "id": "plugin_api.get_file_link.disabled.app_error",
+        "translation": "Οι δημόσιοι σύνδεσμοι έχουν απενεργοποιηθεί."
     }
 ]
