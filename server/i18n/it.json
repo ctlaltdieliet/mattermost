@@ -10618,5 +10618,169 @@
     {
         "id": "web.incoming_webhook.parse_multipart.app_error",
         "translation": "Non è riuscito ad analizzare il modulo multipart per il webhook {{.hook_id}}."
+    },
+    {
+        "id": "api.channel.bookmark.create_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Creazione di un segnalibro canale fallita."
+    },
+    {
+        "id": "api.channel.bookmark.create_channel_bookmark.forbidden.app_error",
+        "translation": "Creazione di un segnalibro canale fallita."
+    },
+    {
+        "id": "api.context.outgoing_oauth_connection.create_connection.input_error",
+        "translation": "Parametri di input non validi."
+    },
+    {
+        "id": "api.context.outgoing_oauth_connection.update_connection.input_error",
+        "translation": "Parametri di input non validi."
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.disabled.error",
+        "translation": "Gli account ospite sono disattivati"
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.license.error",
+        "translation": "La tua licenza non supporta gli account ospite"
+    },
+    {
+        "id": "api.team.user.missing_account",
+        "translation": "Impossibile trovare l'utente."
+    },
+    {
+        "id": "api.templates.ip_filters_changed_footer.contact_support",
+        "translation": "Contatta il Supporto"
+    },
+    {
+        "id": "api.upload.create.upload_too_large.app_error",
+        "translation": "Impossibile caricare il file. Il file è troppo grande."
+    },
+    {
+        "id": "app.bot.update.app_error",
+        "translation": "Impossibile aggiornare il bot."
+    },
+    {
+        "id": "app.eport.generate_presigned_url.fileexist.app_error",
+        "translation": " "
+    },
+    {
+        "id": "app.post.delete_post.get_team.app_error",
+        "translation": "Si è verificato un errore recuperando il gruppo."
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "Non si dispone dei permessi necessari."
+    },
+    {
+        "id": "app.report.send_report_to_user.failed_to_save",
+        "translation": " "
+    },
+    {
+        "id": "app.scheduled_post.private_channel",
+        "translation": "canale privato"
+    },
+    {
+        "id": "app.scheduled_post.unknown_channel",
+        "translation": "Canale sconosciuto"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Id canale non valido."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.post_id.app_error",
+        "translation": "Id pubblicazione non valido."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.user_id.app_error",
+        "translation": "Id utente non valido."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.channel_id.app_error",
+        "translation": "Id canale non valido."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.create_at.app_error",
+        "translation": "Creato alle deve essere un tempo valido."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.id.app_error",
+        "translation": "ID non valido."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.original_id.app_error",
+        "translation": "Id originale non valido."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.type.app_error",
+        "translation": "Tipo non valido."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.update_at.app_error",
+        "translation": "Aggiornato alle deve essere un tempo valido."
+    },
+    {
+        "id": "model.draft.is_valid.channel_id.app_error",
+        "translation": "Id canale non valido."
+    },
+    {
+        "id": "model.draft.is_valid.create_at.app_error",
+        "translation": "Creato alle deve essere un tempo valido."
+    },
+    {
+        "id": "model.draft.is_valid.props.app_error",
+        "translation": "Proprietà invalide."
+    },
+    {
+        "id": "model.draft.is_valid.root_id.app_error",
+        "translation": "Id radice non valido."
+    },
+    {
+        "id": "model.draft.is_valid.update_at.app_error",
+        "translation": "Aggiornato alle deve essere un tempo valido."
+    },
+    {
+        "id": "model.draft.is_valid.user_id.app_error",
+        "translation": "Id utente non valido."
+    },
+    {
+        "id": "model.group.name.reserved_name.app_error",
+        "translation": "il nome di questo gruppo esiste già come nome riservato"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_id.error",
+        "translation": "Id client non valido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_secret.error",
+        "translation": "Segreto client non valido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.create_at.error",
+        "translation": "Creato alle deve essere un tempo valido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.creator_id.error",
+        "translation": "Id creatore non valido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.id.error",
+        "translation": " "
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.name.error",
+        "translation": "Nome non valido."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.update_at.error",
+        "translation": "Aggiornato alle deve essere un tempo valido."
+    },
+    {
+        "id": "model.post.is_valid.message_length.app_error",
+        "translation": "La proprieta Message della pubblicazione è maggiore della lunghezza ammessa."
+    },
+    {
+        "id": "model.remote_cluster_invite.is_valid.token.app_error",
+        "translation": "Token invalido."
     }
 ]
