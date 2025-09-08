@@ -10610,5 +10610,185 @@
     {
         "id": "web.incoming_webhook.parse_multipart.app_error",
         "translation": "N'a pas réussi à analyser le formulaire multipart pour le webhook {{.hook_id}}."
+    },
+    {
+        "id": "api.admin.add_certificate.app_error",
+        "translation": "Échec de l’ajout du certificat."
+    },
+    {
+        "id": "api.channel.bookmark.create_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Échec de la création du marque-page de canal."
+    },
+    {
+        "id": "api.channel.bookmark.delete_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Échec de la suppression du marque-page de canal."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Échec de la mise à jour du marque-page de canal."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark_sort_order.deleted_channel.forbidden.app_error",
+        "translation": "Échec de la mise à jour de l'ordre de tri du marque-page de canal."
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.disabled.error",
+        "translation": "Les comptes invités sont désactivés"
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.license.error",
+        "translation": "Votre licence ne prend pas en charge les comptes invités."
+    },
+    {
+        "id": "api.team.user.missing_account",
+        "translation": "Impossible de trouver l'utilisateur."
+    },
+    {
+        "id": "api.templates.ip_filters_changed_footer.contact_support",
+        "translation": "Contacter le support"
+    },
+    {
+        "id": "api.templates.license_up_for_renewal_contact_sales",
+        "translation": "Contacter le service commercial"
+    },
+    {
+        "id": "api.upload.create.upload_too_large.app_error",
+        "translation": "Impossible d'envoyer le fichier. Le fichier est trop volumineux."
+    },
+    {
+        "id": "app.bot.update.app_error",
+        "translation": "Impossible de modifier le bot."
+    },
+    {
+        "id": "app.draft.feature_disabled",
+        "translation": "La fonction Brouillons est désactivée."
+    },
+    {
+        "id": "app.eport.generate_presigned_url.fileexist.app_error",
+        "translation": "Impossible de vérifier si le fichier existe."
+    },
+    {
+        "id": "app.post.delete_post.get_team.app_error",
+        "translation": "Une erreur s'est produite lors de la récupération de l'équipe"
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "Vous n'avez pas les permissions requises."
+    },
+    {
+        "id": "app.report.send_report_to_user.failed_to_save",
+        "translation": "Une erreur s'est produite lors de l'enregistrement des informations sur le fichier."
+    },
+    {
+        "id": "app.scheduled_post.private_channel",
+        "translation": "Canal privé"
+    },
+    {
+        "id": "app.scheduled_post.unknown_channel",
+        "translation": "Canal inconnu"
+    },
+    {
+        "id": "ent.outgoing_oauth_connections.delete_connection.app_error",
+        "translation": "Une erreur est survenue lors de la suppression de la connexion OAuth sortante."
+    },
+    {
+        "id": "ent.outgoing_oauth_connections.feature_disabled",
+        "translation": "Les connexions OAuth sortantes ne sont pas disponibles sur ce serveur."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Id canal invalide"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.post_id.app_error",
+        "translation": "ID de message invalide"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.user_id.app_error",
+        "translation": "Id utilisateur invalide"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.channel_id.app_error",
+        "translation": "Id canal invalide"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.create_at.app_error",
+        "translation": "La date de création doit être une date valide"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.id.app_error",
+        "translation": "Id invalide"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.original_id.app_error",
+        "translation": "Id d'origine invalide"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.type.app_error",
+        "translation": "Type invalide"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.update_at.app_error",
+        "translation": "La date de modification doit être une date valide"
+    },
+    {
+        "id": "model.draft.is_valid.channel_id.app_error",
+        "translation": "Id canal invalide"
+    },
+    {
+        "id": "model.draft.is_valid.create_at.app_error",
+        "translation": "La date de création doit être une date valide"
+    },
+    {
+        "id": "model.draft.is_valid.props.app_error",
+        "translation": "Propriétés invalides"
+    },
+    {
+        "id": "model.draft.is_valid.root_id.app_error",
+        "translation": "Id de racine invalide"
+    },
+    {
+        "id": "model.draft.is_valid.update_at.app_error",
+        "translation": "La date de modification doit être une date valide"
+    },
+    {
+        "id": "model.draft.is_valid.user_id.app_error",
+        "translation": "Id utilisateur invalide"
+    },
+    {
+        "id": "model.group.name.reserved_name.app_error",
+        "translation": "group name already exists as a reserved name"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_secret.error",
+        "translation": "Secret client invalide"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.create_at.error",
+        "translation": "La date de création doit être une date valide"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.creator_id.error",
+        "translation": "Id créateur invalide"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.id.error",
+        "translation": "Identifiant invalide."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.name.error",
+        "translation": "Nom invalide"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.update_at.error",
+        "translation": "La date de modification doit être une date valide"
+    },
+    {
+        "id": "model.post.is_valid.message_length.app_error",
+        "translation": "La propriété Message du message est plus longue que la longueur maximale autorisée."
+    },
+    {
+        "id": "model.remote_cluster_invite.is_valid.token.app_error",
+        "translation": "Jeton invalide"
     }
 ]
