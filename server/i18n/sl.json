@@ -10604,5 +10604,189 @@
     {
         "id": "web.incoming_webhook.split_props_length.app_error",
         "translation": "Ni mogoče razdeliti rekvizitov spletne kljuke na dele znakov {{.Max}}."
+    },
+    {
+        "id": "api.command_channel_header.update_channel.max_length",
+        "translation": "Ta glava kanala je predolga, vnesite krajšo"
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.license.error",
+        "translation": "vaša licenca ne podpira skupin ldap"
+    },
+    {
+        "id": "api.team.user.missing_account",
+        "translation": "Uporabnika ni mogoče najti."
+    },
+    {
+        "id": "api.templates.welcome_body.app_download_button",
+        "translation": "Prenesi"
+    },
+    {
+        "id": "api.upload.create.upload_too_large.app_error",
+        "translation": "Napaka pri nalaganju. Datoteka je prevelika."
+    },
+    {
+        "id": "app.bot.update.app_error",
+        "translation": "Objave ni mogoče posodobiti"
+    },
+    {
+        "id": "app.channel.get_by_name.existing.app_error",
+        "translation": "Ni mogoče najti obstoječega kanala"
+    },
+    {
+        "id": "app.command.getcommand.internal_error",
+        "translation": "Ukaza ni mogoče dobiti"
+    },
+    {
+        "id": "app.command_webhook.handle_command_webhook.parse",
+        "translation": "Dohodnih podatkov ni mogoče razbrati"
+    },
+    {
+        "id": "app.command_webhook.try_use.invalid",
+        "translation": "Neveljavna metoda"
+    },
+    {
+        "id": "app.post.delete_post.get_team.app_error",
+        "translation": "Pri pridobivanju ekipe je prišlo do napake"
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "Nimate ustreznih dovoljenj"
+    },
+    {
+        "id": "app.scheduled_post.private_channel",
+        "translation": "Zasebni kanal"
+    },
+    {
+        "id": "app.system.system_bot.bot_displayname",
+        "translation": "Sistem"
+    },
+    {
+        "id": "app.upload.upload_data.large_image.app_error",
+        "translation": "Dimenzije {{.Filename}} ({{.Width}} do {{.Height}} pikslov) presegajo omejitve"
+    },
+    {
+        "id": "app.user.missing_account.const",
+        "translation": "Uporabnika ni mogoče najti."
+    },
+    {
+        "id": "ent.api.post.send_notifications_and_forget.push_image_only",
+        "translation": " je priložil datoteko."
+    },
+    {
+        "id": "ent.elasticsearch.search_files.search_failed",
+        "translation": "Iskanje ni bilo mogoče dokončati"
+    },
+    {
+        "id": "ent.elasticsearch.search_files.unmarshall_file_failed",
+        "translation": "Napaka pri dekodiranju rezultatov iskanja"
+    },
+    {
+        "id": "error",
+        "translation": "Napaka"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Neveljaven ID kanala"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.post_id.app_error",
+        "translation": "Neveljaven ID objave"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.user_id.app_error",
+        "translation": "Neveljaven ID uporabnika."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.channel_id.app_error",
+        "translation": "Neveljaven ID kanala"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.create_at.app_error",
+        "translation": "Ustvari na mora biti veljaven čas"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.id.app_error",
+        "translation": "Neveljaven ID"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.original_id.app_error",
+        "translation": "Neveljaven original ID"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.type.app_error",
+        "translation": "Neveljavna vrsta"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.update_at.app_error",
+        "translation": "Posodobi na mora biti veljaven čas"
+    },
+    {
+        "id": "model.draft.is_valid.channel_id.app_error",
+        "translation": "Neveljaven ID kanala"
+    },
+    {
+        "id": "model.draft.is_valid.create_at.app_error",
+        "translation": "Ustvari na mora biti veljaven čas"
+    },
+    {
+        "id": "model.draft.is_valid.props.app_error",
+        "translation": "Neveljavni rekviziti"
+    },
+    {
+        "id": "model.draft.is_valid.root_id.app_error",
+        "translation": "Neveljaven root ID"
+    },
+    {
+        "id": "model.draft.is_valid.update_at.app_error",
+        "translation": "Posodobi na mora biti veljaven čas"
+    },
+    {
+        "id": "model.draft.is_valid.user_id.app_error",
+        "translation": "Neveljaven ID uporabnika."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_id.error",
+        "translation": "Neveljaven ID odjemalca"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_secret.error",
+        "translation": "Neveljavna skrivnost odjemalca"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.create_at.error",
+        "translation": "Ustvari na mora biti veljaven čas"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.creator_id.error",
+        "translation": "Neveljaven ID ustvarjalca"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.name.error",
+        "translation": "Neveljavno ime"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.update_at.error",
+        "translation": "Posodobi na mora biti veljaven čas"
+    },
+    {
+        "id": "model.post.is_valid.message_length.app_error",
+        "translation": "Lastnost objave sporočila je daljša od največje dovoljene dolžine."
+    },
+    {
+        "id": "model.reaction.is_valid.update_at.app_error",
+        "translation": "Posodobi na mora biti veljaven čas"
+    },
+    {
+        "id": "model.remote_cluster_invite.is_valid.token.app_error",
+        "translation": "Neveljaven žeton."
+    },
+    {
+        "id": "model.upload_session.is_valid.id.app_error",
+        "translation": "Neveljavna ID vrednost."
+    },
+    {
+        "id": "model.upload_session.is_valid.path.app_error",
+        "translation": "Neveljavna vrednost za pot."
     }
 ]
