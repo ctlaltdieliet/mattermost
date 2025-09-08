@@ -10494,5 +10494,281 @@
     {
         "id": "app.select_error",
         "translation": "오류 선택"
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark.direct_or_group_channels.forbidden.app_error",
+        "translation": "채널 북마크 업데이트하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.create_channel_bookmark.forbidden.app_error",
+        "translation": "채널 북마크를 생성하는데 실패했습니다."
+    },
+    {
+        "id": "app.bot.update.app_error",
+        "translation": "봇을 업데이트 할 수 없습니다."
+    },
+    {
+        "id": "api.channel.bookmark.delete_channel_bookmark.forbidden.app_error",
+        "translation": "채널 북마크 삭제하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.channel_bookmark.license.error",
+        "translation": "해당 라이선스에서는 채널 북마크 기능을 지원하지 않습니다."
+    },
+    {
+        "id": "api.channel.bookmark.delete_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "채널 북마크 삭제하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.create_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "채널 북마크를 생성하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.create_channel_bookmark.direct_or_group_channels.forbidden.app_error",
+        "translation": "사용자는 채널 북마크를 생성할 수 없습니다."
+    },
+    {
+        "id": "api.channel.bookmark.create_channel_bookmark.direct_or_group_channels_by_guests.forbidden.app_error",
+        "translation": "채널 북마크를 생성하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.delete_channel_bookmark.direct_or_group_channels.forbidden.app_error",
+        "translation": "채널 북마크 삭제하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.delete_channel_bookmark.direct_or_group_channels_by_guests.forbidden.app_error",
+        "translation": "채널 북마크 삭제하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "채널 북마크 업데이트하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark.direct_or_group_channels_by_guests.forbidden.app_error",
+        "translation": "채널 북마크 업데이트하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark.forbidden.app_error",
+        "translation": "채널 북마크 업데이트하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark_sort_order.deleted_channel.forbidden.app_error",
+        "translation": "채널 북마크 정렬을 업데이트하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark_sort_order.direct_or_group_channels.forbidden.app_error",
+        "translation": "채널 북마크 정렬을 업데이트하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark_sort_order.direct_or_group_channels_by_guests.forbidden.app_error",
+        "translation": "채널 북마크 정렬을 업데이트하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark_sort_order.forbidden.app_error",
+        "translation": "채널 북마크 정렬을 업데이트하는데 실패했습니다."
+    },
+    {
+        "id": "api.channel.create_channel.direct_channel.remote_restricted.app_error",
+        "translation": "원격 사용자와 개인 메시지 채널을 생성할 수 없습니다"
+    },
+    {
+        "id": "api.channel.create_channel.missing_display_name.error",
+        "translation": "요청 본문에 display_name이 누락되었습니다"
+    },
+    {
+        "id": "api.channel.create_channel.missing_team_id.error",
+        "translation": "요청 본문에 team_id가 누락되었습니다"
+    },
+    {
+        "id": "api.channel.create_group.remote_restricted.app_error",
+        "translation": "원격 사용자와 그룹 채널을 생성할 수 없습니다"
+    },
+    {
+        "id": "api.channel.gm_to_channel_conversion.not_allowed_for_user.request_error",
+        "translation": "해당 사용자가 그룹 메시지를 비공개 채널로 전환할 권한이 없습니다"
+    },
+    {
+        "id": "api.channel.group_message.converted.to_private_channel",
+        "translation": "{{.ConvertedByUsername}}님이 {{.GMMembers}}과 그룹 메시지 기반으로 채널을 생성하였습니다."
+    },
+    {
+        "id": "api.channel.patch_update_channel.update_direct_or_group_messages_not_allowed.app_error",
+        "translation": "당신은 개인 메시지나 그룹 메시지의 name, display_name 또는 purpose 속성을 변경할 수 없습니다."
+    },
+    {
+        "id": "api.channel.update_channel.banner_info.channel_type.not_allowed",
+        "translation": "채널 배너는 공개 채널이나 비공개 채널에서만 설정할 수 있습니다."
+    },
+    {
+        "id": "api.channel.update_channel.not_allowed.app_error",
+        "translation": "정책이 적용된 채널들은 업데이트할 수 없습니다."
+    },
+    {
+        "id": "api.channel.update_channel.update_direct_or_group_messages_not_allowed.app_error",
+        "translation": "당신은 개인 메시지나 그룹 메시지의 name, display_name 또는 purpose 속성을 변경할 수 없습니다."
+    },
+    {
+        "id": "api.team.user.missing_account",
+        "translation": "사용자를 찾을 수 없습니다."
+    },
+    {
+        "id": "api.templates.ip_filters_changed_footer.contact_support",
+        "translation": "문의처"
+    },
+    {
+        "id": "api.user.upload_profile_user.check_image_limits.app_error",
+        "translation": "이미지 한계를 검사하지 못했습니다. 해상도가 너무 높습니다."
+    },
+    {
+        "id": "app.draft.feature_disabled",
+        "translation": "임시저장이 비활성되어있습니다."
+    },
+    {
+        "id": "app.eport.generate_presigned_url.fileexist.app_error",
+        "translation": "파일의 존재 유무를 확인하지 못했습니다."
+    },
+    {
+        "id": "app.notification.body.dm.time",
+        "translation": "{{.Hour}}:{{.Minute}} {{.TimeZone}}"
+    },
+    {
+        "id": "app.post.delete_post.get_team.app_error",
+        "translation": "팀을 불러오는 도중 문제가 발생했습니다."
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "작업을 할 수 있는 권한이 없습니다."
+    },
+    {
+        "id": "app.report.send_report_to_user.failed_to_save",
+        "translation": "파일 정보를 저장하지 못했습니다."
+    },
+    {
+        "id": "app.scheduled_post.private_channel",
+        "translation": "비공개 채널"
+    },
+    {
+        "id": "app.scheduled_post.unknown_channel",
+        "translation": "알 수 없는 채널"
+    },
+    {
+        "id": "app.upload.get.app_error",
+        "translation": "업로드에 실패했습니다."
+    },
+    {
+        "id": "error",
+        "translation": "오류"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Invalid channel id"
+    },
+    {
+        "id": "model.acknowledgement.is_valid.post_id.app_error",
+        "translation": "잘못된 루트 아이디입니다."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.user_id.app_error",
+        "translation": "잘못된 사용자 ID"
+    },
+    {
+        "id": "model.channel.is_valid.banner_info.channel_type.app_error",
+        "translation": "채널 배너는 공개 채널이나 비공개 채널에서만 설정할 수 있습니다."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.channel_id.app_error",
+        "translation": "Invalid channel id"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.create_at.app_error",
+        "translation": "Create at must be a valid time"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.id.app_error",
+        "translation": "잘못된 ID"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.original_id.app_error",
+        "translation": "Invalid original id"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.type.app_error",
+        "translation": "올바르지 않은 형식"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.update_at.app_error",
+        "translation": "Update at must be a valid time"
+    },
+    {
+        "id": "model.draft.is_valid.channel_id.app_error",
+        "translation": "Invalid channel id"
+    },
+    {
+        "id": "model.draft.is_valid.create_at.app_error",
+        "translation": "Create at must be a valid time"
+    },
+    {
+        "id": "model.draft.is_valid.props.app_error",
+        "translation": "잘못된 프로퍼티입니다."
+    },
+    {
+        "id": "model.draft.is_valid.root_id.app_error",
+        "translation": "잘못된 루트 아이디입니다."
+    },
+    {
+        "id": "model.draft.is_valid.update_at.app_error",
+        "translation": "Update at must be a valid time"
+    },
+    {
+        "id": "model.draft.is_valid.user_id.app_error",
+        "translation": "잘못된 사용자 ID"
+    },
+    {
+        "id": "model.group.name.reserved_name.app_error",
+        "translation": "group name already exists as a reserved name"
+    },
+    {
+        "id": "model.member.is_valid.channel.app_error",
+        "translation": "채널 이름이 유효하지 않습니다."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_id.error",
+        "translation": "잘못된 클라이언트 ID"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_secret.error",
+        "translation": "Invalid client secret"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.create_at.error",
+        "translation": "Create at must be a valid time"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.creator_id.error",
+        "translation": "잘못된 제출자 ID"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.id.error",
+        "translation": "유효하지 않은 ID입니다."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.name.error",
+        "translation": "잘못된 이름"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.update_at.error",
+        "translation": "Update at must be a valid time"
+    },
+    {
+        "id": "model.post.is_valid.message_length.app_error",
+        "translation": "Post Message property is longer than the maximum permitted length."
+    },
+    {
+        "id": "model.reaction.is_valid.update_at.app_error",
+        "translation": "Update at must be a valid time"
+    },
+    {
+        "id": "model.remote_cluster_invite.is_valid.token.app_error",
+        "translation": "잘못된 토큰"
     }
 ]
