@@ -10600,5 +10600,181 @@
             "one": "Не успя да изпрати {{.Count}} планирана публикация.",
             "other": "Не успя да изпрати {{.Count}} планирани публикации."
         }
+    },
+    {
+        "id": "app.report.send_report_to_user.failed_to_save",
+        "translation": "Неуспешен запис на информацията за файл."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark_sort_order.deleted_channel.forbidden.app_error",
+        "translation": "Неуспешно актуализиране реда на сортиране за отметките на канала."
+    },
+    {
+        "id": "api.team.user.missing_account",
+        "translation": "Не може да се намери потребителя."
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "Нямате необходимите права."
+    },
+    {
+        "id": "ent.outgoing_oauth_connections.delete_connection.app_error",
+        "translation": "Възникна грешка при изтриването на изходящата OAuth връзка."
+    },
+    {
+        "id": "ent.outgoing_oauth_connections.feature_disabled",
+        "translation": "Изходящите OAuth връзки са недостъпни на този сървър."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Невалиден id на канал."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.post_id.app_error",
+        "translation": "Невалиден id на публикацията."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.user_id.app_error",
+        "translation": "Невалиден id на потребител."
+    },
+    {
+        "id": "model.draft.is_valid.user_id.app_error",
+        "translation": "Невалиден id на потребител."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.name.error",
+        "translation": "Невалидно име."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.update_at.error",
+        "translation": "'Обновено в' трябва да е валидно време."
+    },
+    {
+        "id": "api.channel.bookmark.create_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Неуспешно създаване отметките на канала."
+    },
+    {
+        "id": "api.channel.bookmark.delete_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Неуспешно изтриване отметките на канала."
+    },
+    {
+        "id": "api.channel.bookmark.update_channel_bookmark.deleted_channel.forbidden.app_error",
+        "translation": "Неуспешно актуализиране отметките на канала."
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.disabled.error",
+        "translation": "Профилите за гости са забранени"
+    },
+    {
+        "id": "api.team.invite_guests_to_channels.license.error",
+        "translation": "Вашият лиценз не поддържа профили за гости"
+    },
+    {
+        "id": "api.templates.ip_filters_changed_footer.contact_support",
+        "translation": "Свържете се с поддръжката"
+    },
+    {
+        "id": "api.templates.license_up_for_renewal_contact_sales",
+        "translation": "Връзка продажби"
+    },
+    {
+        "id": "api.upload.create.upload_too_large.app_error",
+        "translation": "Файлът не може да се качи. Файлът е твърде голям."
+    },
+    {
+        "id": "app.bot.update.app_error",
+        "translation": "Ботът не може да се актуализира."
+    },
+    {
+        "id": "app.draft.feature_disabled",
+        "translation": "Функцията Чернови е забранена."
+    },
+    {
+        "id": "app.eport.generate_presigned_url.fileexist.app_error",
+        "translation": "Неуспешна проверка дали файлът съществува."
+    },
+    {
+        "id": "app.post.delete_post.get_team.app_error",
+        "translation": "Възникна грешка при получаването на екипа."
+    },
+    {
+        "id": "app.scheduled_post.private_channel",
+        "translation": "частен канал"
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.channel_id.app_error",
+        "translation": "Невалиден id на канал."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.create_at.app_error",
+        "translation": "''Създадено в' трябва да е валидно време."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.id.app_error",
+        "translation": "Невалиден id."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.original_id.app_error",
+        "translation": "Невалиден оригинален id."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.type.app_error",
+        "translation": "Невалиден тип."
+    },
+    {
+        "id": "model.channel_bookmark.is_valid.update_at.app_error",
+        "translation": "'Обновено в' трябва да е валидно време."
+    },
+    {
+        "id": "model.draft.is_valid.channel_id.app_error",
+        "translation": "Невалиден id на канал."
+    },
+    {
+        "id": "model.draft.is_valid.create_at.app_error",
+        "translation": "''Създадено в' трябва да е валидно време."
+    },
+    {
+        "id": "model.draft.is_valid.props.app_error",
+        "translation": "Невалидни свойства."
+    },
+    {
+        "id": "model.draft.is_valid.root_id.app_error",
+        "translation": "Невалиден root id."
+    },
+    {
+        "id": "model.draft.is_valid.update_at.app_error",
+        "translation": "'Обновено в' трябва да е валидно време."
+    },
+    {
+        "id": "model.group.name.reserved_name.app_error",
+        "translation": "името на група вече съществува като запазено име"
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_id.error",
+        "translation": "Невалиден id на клиента."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.client_secret.error",
+        "translation": "Невалидна тайна на клиента."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.create_at.error",
+        "translation": "''Създадено в' трябва да е валидно време."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.creator_id.error",
+        "translation": "Невалиден id на създател."
+    },
+    {
+        "id": "model.outgoing_oauth_connection.is_valid.id.error",
+        "translation": "Невалиден ИН."
+    },
+    {
+        "id": "model.post.is_valid.message_length.app_error",
+        "translation": "Свойството Post Message е по-голямо от максимално разрешената дължина."
+    },
+    {
+        "id": "model.remote_cluster_invite.is_valid.token.app_error",
+        "translation": "Невалиден маркер."
     }
 ]
