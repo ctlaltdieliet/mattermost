@@ -10771,5 +10771,13 @@
     {
         "id": "web.incoming_webhook.user.app_error",
         "translation": "Ei leidnud kasutajat {{.user}}"
+    },
+    {
+        "id": "api.command_code.name",
+        "translation": "kood"
+    },
+    {
+        "id": "app.scheduled_post.private_channel",
+        "translation": "privaatkanalid"
     }
 ]
