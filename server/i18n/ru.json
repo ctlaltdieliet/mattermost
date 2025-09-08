@@ -10758,5 +10758,33 @@
     {
         "id": "web.incoming_webhook.parse_multipart.app_error",
         "translation": "Не удалось разобрать многочастную форму для вебхука {{.hook_id}}."
+    },
+    {
+        "id": "app.post.restore_post_version.not_allowed.app_error",
+        "translation": "У вас нет соответствующих прав."
+    },
+    {
+        "id": "app.update_scheduled_post.update_permission.error",
+        "translation": "У вас нет разрешения на обновление этого ресурса."
+    },
+    {
+        "id": "api.upload.invalid_type_for_shared_channel.app_error",
+        "translation": "Не удалось загрузить файл. Канал загрузки не используется совместно с удаленным."
+    },
+    {
+        "id": "model.acknowledgement.is_valid.channel_id.app_error",
+        "translation": "Недопустимый идентификатор канала"
+    },
+    {
+        "id": "model.channel.is_valid.banner_info.channel_type.app_error",
+        "translation": "Баннер канала можно настроить только на публичных и приватных каналах."
+    },
+    {
+        "id": "model.post.is_valid.message_length.app_error",
+        "translation": "Post Message длиннее, чем максимально разрешённая длина."
+    },
+    {
+        "id": "model.remote_cluster_invite.is_valid.token.app_error",
+        "translation": "Неверный токен."
     }
 ]
