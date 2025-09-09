@@ -10657,7 +10657,7 @@
     },
     {
         "id": "error",
-        "translation": "오류"
+        "translation": "에러"
     },
     {
         "id": "model.acknowledgement.is_valid.channel_id.app_error",
