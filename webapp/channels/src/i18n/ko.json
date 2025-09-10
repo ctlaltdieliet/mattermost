@@ -97,7 +97,7 @@
   "add_command.method.get": "GET",
   "add_command.method.help": "Mattermost가 애플리케이션과 통신하기 위해 전송하는 POST 혹은 GET 요청의 유형을 지정합니다.",
   "add_command.method.post": "POST",
-  "add_command.outgoing_oauth_connections.help_text": "명령어를 <link>Outgoing OAuth Connections</link>에 연결할 수 있습니다.",
+  "add_command.outgoing_oauth_connections.help_text": "명령어들을 <link>Outgoing OAuth Connections</link>에 연결할 수 있습니다.",
   "add_command.save": "저장",
   "add_command.saving": "저장 중...",
   "add_command.token": "**토큰**: {token}",
