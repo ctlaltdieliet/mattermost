@@ -8041,7 +8041,7 @@
     },
     {
         "id": "api.post.check_for_out_of_team_mentions.message.one",
-        "translation": "{{{.사용자 아이디}}}}는 이 팀의 멤버가 아니기 때문에 이 멘션에 대한 알림을 받지 못했습니다."
+        "translation": "@{{.Username}}(이)는 이 팀의 멤버가 아니기 때문에 이 멘션에 대한 알림을 받지 못했습니다."
     },
     {
         "id": "api.post.deduplicate_create_post.cache_error",
