@@ -5,6 +5,7 @@ package api4
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -34,12 +35,33 @@ func scheduledPostChecks(where string, c *Context, scheduledPost *model.Schedule
 		return
 	}
 
+	if model.IsSystemMessagePostType(scheduledPost.Type) {
+		c.SetInvalidParam("post.type")
+		return
+	}
+
 	postHardenedModeCheckWithContext(where, c, scheduledPost.GetProps())
 	if c.Err != nil {
 		return
 	}
 
 	postPriorityCheckWithContext(where, c, scheduledPost.GetPriority(), scheduledPost.RootId)
+	if c.Err != nil {
+		return
+	}
+
+	postCardTypeCheckWithContext(where, c, scheduledPost.Type)
+	if c.Err != nil {
+		return
+	}
+
+	// Validate burn-on-read restrictions for scheduled post
+	post := &model.Post{
+		ChannelId: scheduledPost.ChannelId,
+		UserId:    scheduledPost.UserId,
+		Type:      scheduledPost.Type,
+	}
+	postBurnOnReadCheckWithContext(where, c, post, nil)
 }
 
 func requireScheduledPostsEnabled(c *Context) {
@@ -73,6 +95,13 @@ func createSchedulePost(c *Context, w http.ResponseWriter, r *http.Request) {
 	auditRec := c.MakeAuditRecord(model.AuditEventCreateSchedulePost, model.AuditStatusFail)
 	defer c.LogAuditRecWithLevel(auditRec, app.LevelContent)
 	model.AddEventParameterAuditableToAuditRec(auditRec, "scheduledPost", &scheduledPost)
+
+	if len(scheduledPost.FileIds) > 0 {
+		if ok, _ := c.App.SessionHasPermissionToChannel(c.AppContext, *c.AppContext.Session(), scheduledPost.ChannelId, model.PermissionUploadFile); !ok {
+			c.SetPermissionError(model.PermissionUploadFile)
+			return
+		}
+	}
 
 	scheduledPostChecks("Api4.createSchedulePost", c, &scheduledPost)
 	if c.Err != nil {
@@ -154,9 +183,24 @@ func updateScheduledPost(c *Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var scheduledPost model.ScheduledPost
-	if err := json.NewDecoder(r.Body).Decode(&scheduledPost); err != nil {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
 		c.SetInvalidParamWithErr("schedule_post", err)
+		return
+	}
+
+	var scheduledPost model.ScheduledPost
+	if unmarshalErr := json.Unmarshal(body, &scheduledPost); unmarshalErr != nil {
+		c.SetInvalidParamWithErr("schedule_post", unmarshalErr)
+		return
+	}
+
+	// Detect whether the payload included repeat_type at all.
+	var rawPayload struct {
+		RepeatType json.RawMessage `json:"repeat_type"`
+	}
+	if unmarshalErr := json.Unmarshal(body, &rawPayload); unmarshalErr != nil {
+		c.SetInvalidParamWithErr("schedule_post", unmarshalErr)
 		return
 	}
 
@@ -169,12 +213,52 @@ func updateScheduledPost(c *Context, w http.ResponseWriter, r *http.Request) {
 	defer c.LogAuditRecWithLevel(auditRec, app.LevelContent)
 	model.AddEventParameterAuditableToAuditRec(auditRec, "scheduledPost", &scheduledPost)
 
+	userId := c.AppContext.Session().UserId
+	existingScheduledPost, err := c.App.Srv().Store().ScheduledPost().Get(c.AppContext, scheduledPost.Id)
+	if err != nil {
+		c.Err = model.NewAppError("updateScheduledPost", "app.update_scheduled_post.get_scheduled_post.error", nil, "", http.StatusInternalServerError).Wrap(err)
+		return
+	}
+	if existingScheduledPost == nil {
+		c.Err = model.NewAppError("updateScheduledPost", "app.update_scheduled_post.existing_scheduled_post.not_exist", nil, "", http.StatusNotFound)
+		return
+	}
+	if existingScheduledPost.UserId != userId {
+		c.Err = model.NewAppError("updateScheduledPost", "app.update_scheduled_post.update_permission.error", nil, "", http.StatusForbidden)
+		return
+	}
+
+	// Clients that predate recurring scheduled posts omit the repeat fields entirely, so an
+	// absent repeat_type preserves the existing recurrence rather than ending the series.
+	// Sending an explicit, empty repeat_type remains the way to stop repeating.
+	if rawPayload.RepeatType == nil {
+		scheduledPost.RepeatType = existingScheduledPost.RepeatType
+		scheduledPost.RepeatTimezone = existingScheduledPost.RepeatTimezone
+	}
+
+	// The type is immutable; App.UpdateScheduledPost restores it from the stored record via
+	// RestoreNonUpdatableFields. Do it here as well so the checks below see the type the post
+	// will actually be sent with, rather than whatever the client echoed back — clients that
+	// omit type would otherwise skip the burn-on-read checks entirely.
+	scheduledPost.Type = existingScheduledPost.Type
+
+	if len(scheduledPost.FileIds) > 0 {
+		originalPost, err := existingScheduledPost.ToPost()
+		if err != nil {
+			c.Err = model.NewAppError("updateScheduledPost", "app.update_scheduled_post.convert_to_post.error", nil, "", http.StatusInternalServerError).Wrap(err)
+			return
+		}
+		checkUploadFilePermissionForNewFiles(c, scheduledPost.FileIds, originalPost)
+		if c.Err != nil {
+			return
+		}
+	}
+
 	scheduledPostChecks("Api4.updateScheduledPost", c, &scheduledPost)
 	if c.Err != nil {
 		return
 	}
 
-	userId := c.AppContext.Session().UserId
 	updatedScheduledPost, appErr := c.App.UpdateScheduledPost(c.AppContext, userId, &scheduledPost, connectionID)
 	if appErr != nil {
 		c.Err = appErr
@@ -209,6 +293,21 @@ func deleteScheduledPost(c *Context, w http.ResponseWriter, r *http.Request) {
 	model.AddEventParameterToAuditRec(auditRec, "scheduledPostId", scheduledPostId)
 
 	userId := c.AppContext.Session().UserId
+
+	existingScheduledPost, err := c.App.Srv().Store().ScheduledPost().Get(c.AppContext, scheduledPostId)
+	if err != nil {
+		c.Err = model.NewAppError("deleteScheduledPost", "app.delete_scheduled_post.get_scheduled_post.error", nil, "", http.StatusInternalServerError).Wrap(err)
+		return
+	}
+	if existingScheduledPost == nil {
+		c.Err = model.NewAppError("deleteScheduledPost", "app.delete_scheduled_post.existing_scheduled_post.not_exist", nil, "", http.StatusNotFound)
+		return
+	}
+	if existingScheduledPost.UserId != userId {
+		c.Err = model.NewAppError("deleteScheduledPost", "app.delete_scheduled_post.delete_permission.error", nil, "", http.StatusForbidden)
+		return
+	}
+
 	connectionID := r.Header.Get(model.ConnectionId)
 	deletedScheduledPost, appErr := c.App.DeleteScheduledPost(c.AppContext, userId, scheduledPostId, connectionID)
 	if appErr != nil {

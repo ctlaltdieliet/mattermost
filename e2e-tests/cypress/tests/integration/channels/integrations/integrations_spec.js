@@ -7,12 +7,11 @@
 // - Use element ID when selecting an element. Create one if none.
 // ***************************************************************
 
-// Stage: @prod
 // Group: @channels @integrations
 
-import {getRandomId} from '../../../utils';
-import * as MESSAGES from '../../../fixtures/messages';
-import * as TIMEOUTS from '../../../fixtures/timeouts';
+import {getRandomId} from '@/utils';
+import * as MESSAGES from '@/fixtures/messages';
+import * as TIMEOUTS from '@/fixtures/timeouts';
 
 describe('Integrations page', () => {
     let testTeam;
@@ -188,7 +187,7 @@ describe('Integrations page', () => {
         cy.visit(`/${testTeam.name}/channels/town-square`);
 
         // # Open product menu and click 'Integrations'
-        cy.uiOpenProductMenu('Integrations');
+        cy.uiOpenSwitchProductMenu('Integrations');
 
         cy.get('.integration-option__title').contains('Incoming Webhooks').click();
 
@@ -204,7 +203,7 @@ describe('Integrations page', () => {
         cy.visit(`/${testTeam.name}/channels/town-square`);
 
         // # Click 'Integrations' at product menu
-        cy.uiOpenProductMenu('Integrations');
+        cy.uiOpenSwitchProductMenu('Integrations');
 
         // * Verify we are at integrations page URL
         cy.url().should('include', '/integrations');
@@ -274,7 +273,7 @@ describe('Integrations page', () => {
         cy.visit(`/${testTeam.name}/channels/town-square`);
 
         // # Click 'Integrations' at product menu
-        cy.uiOpenProductMenu('Integrations');
+        cy.uiOpenSwitchProductMenu('Integrations');
 
         // * Verify we are at integrations page URL
         cy.url().should('include', '/integrations');
@@ -362,7 +361,7 @@ describe('Integrations page', () => {
         cy.visit(`/${testTeam.name}/channels/town-square`);
 
         // # Click 'Integrations' at product menu
-        cy.uiOpenProductMenu('Integrations');
+        cy.uiOpenSwitchProductMenu('Integrations');
 
         // * Verify we are at integrations page URL
         cy.url().should('include', '/integrations');

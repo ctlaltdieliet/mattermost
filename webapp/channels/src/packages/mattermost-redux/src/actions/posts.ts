@@ -7,6 +7,7 @@ import {batchActions} from 'redux-batched-actions';
 import type {Channel, ChannelUnread} from '@mattermost/types/channels';
 import type {FetchPaginatedThreadOptions} from '@mattermost/types/client4';
 import type {Group} from '@mattermost/types/groups';
+import type {PostActionIntegrationFormat} from '@mattermost/types/integration_actions';
 import {isMessageAttachmentArray} from '@mattermost/types/message_attachments';
 import type {Post, PostList, PostAcknowledgement} from '@mattermost/types/posts';
 import type {Reaction} from '@mattermost/types/reactions';
@@ -27,7 +28,7 @@ import {decrementThreadCounts} from 'mattermost-redux/actions/threads';
 import {getProfilesByIds, getProfilesByUsernames, getStatusesByIds} from 'mattermost-redux/actions/users';
 import {Client4, DEFAULT_LIMIT_AFTER, DEFAULT_LIMIT_BEFORE} from 'mattermost-redux/client';
 import {General, Preferences, Posts} from 'mattermost-redux/constants';
-import {getCurrentChannelId, getMyChannelMember as getMyChannelMemberSelector} from 'mattermost-redux/selectors/entities/channels';
+import {getAllChannels, getCurrentChannelId, getMyChannelMember, getMyChannelMember as getMyChannelMemberSelector} from 'mattermost-redux/selectors/entities/channels';
 import {getIsUserStatusesConfigEnabled} from 'mattermost-redux/selectors/entities/common';
 import {getCustomEmojisByName as selectCustomEmojisByName} from 'mattermost-redux/selectors/entities/emojis';
 import {getAllGroupsByName} from 'mattermost-redux/selectors/entities/groups';
@@ -36,6 +37,7 @@ import {getUnreadScrollPositionPreference, isCollapsedThreadsEnabled} from 'matt
 import {getCurrentUserId, getUsersByUsername} from 'mattermost-redux/selectors/entities/users';
 import type {ActionResult, DispatchFunc, GetStateFunc, ActionFunc, ActionFuncAsync, ThunkActionFunc} from 'mattermost-redux/types/actions';
 import {DelayedDataLoader} from 'mattermost-redux/utils/data_loader';
+import {scanHumanReadableStringsFromInteractiveProps} from 'mattermost-redux/utils/post_interactive_utils';
 import {isCombinedUserActivityPost} from 'mattermost-redux/utils/post_list';
 
 import {logError, LogErrorBarMode} from './errors';
@@ -174,7 +176,7 @@ export type CreatePostReturnType = {
     created?: boolean;
     pending?: string;
     error?: string;
-}
+};
 
 export function createPost(
     post: Post,
@@ -200,6 +202,21 @@ export function createPost(
             update_at: timestamp,
             reply_count: 0,
         };
+
+        // Add current_team_id for DM/GM posts to enable proper channel mention resolution
+        // This prevents cross-team information disclosure and makes mention resolution deterministic
+        const channel = state.entities.channels.channels[post.channel_id];
+        const currentTeamId = state.entities.teams.currentTeamId;
+        if (channel && !channel.team_id && currentTeamId) {
+            // DM/GM channel - add current team context
+            newPost = {
+                ...newPost,
+                props: {
+                    ...newPost.props,
+                    current_team_id: currentTeamId,
+                },
+            };
+        }
 
         if (post.root_id) {
             newPost.reply_count = PostSelectors.getPostRepliesCount(state, post.root_id) + 1;
@@ -510,7 +527,7 @@ export function unpinPost(postId: string): ActionFuncAsync {
 export type SubmitReactionReturnType = {
     reaction?: Reaction;
     removedReaction?: boolean;
-}
+};
 
 export function addReaction(postId: string, emojiName: string): ActionFuncAsync<SubmitReactionReturnType> {
     return async (dispatch, getState) => {
@@ -749,7 +766,6 @@ export function getPostsUnread(channelId: string, fetchThreads = true, collapsed
             dispatch(logError(error));
             return {error};
         }
-
         const actions: AnyAction[] = [
             {
                 type: PostTypes.RECEIVED_POSTS,
@@ -928,7 +944,7 @@ export function getPostThreads(posts: Post[], fetchThreads = true): ThunkActionF
 }
 
 // Note that getMentionsAndStatusesForPosts can take either an array of posts or a map of ids to posts
-export async function getMentionsAndStatusesForPosts(postsArrayOrMap: Post[]|PostList['posts'], dispatch: DispatchFunc, getState: GetStateFunc) {
+export async function getMentionsAndStatusesForPosts(postsArrayOrMap: Post[] | PostList['posts'], dispatch: DispatchFunc, getState: GetStateFunc) {
     if (!postsArrayOrMap) {
         // Some API methods return {error} for no results
         return Promise.resolve();
@@ -1117,7 +1133,7 @@ export function getNeededAtMentionedUsernamesAndGroups(state: GlobalState, posts
     }
 
     for (const post of posts) {
-        // These correspond to the fields searched by getMentionsEnabledFields on the server
+        // These correspond to the text segments from model.Post.AllStrings on the server (message, attachments, interactive).
         findNeededUsernamesAndGroups(post.message);
 
         if (isMessageAttachmentArray(post.props?.attachments)) {
@@ -1134,12 +1150,16 @@ export function getNeededAtMentionedUsernamesAndGroups(state: GlobalState, posts
                 }
             }
         }
+
+        for (const text of scanHumanReadableStringsFromInteractiveProps(post.props)) {
+            findNeededUsernamesAndGroups(text);
+        }
     }
 
     return usernamesAndGroupsToLoad;
 }
 
-export type ExtendedPost = Post & { system_post_ids?: string[] };
+export type ExtendedPost = Post & {system_post_ids?: string[]};
 
 export function removePost(post: ExtendedPost): ActionFunc<boolean> {
     return (dispatch, getState) => {
@@ -1214,14 +1234,14 @@ export function addPostReminder(userId: string, postId: string, timestamp: numbe
 }
 
 export function doPostAction(postId: string, actionId: string, selectedOption = '') {
-    return doPostActionWithCookie(postId, actionId, '', selectedOption);
+    return doPostActionWithCookie(postId, actionId, '', selectedOption, undefined, '');
 }
 
-export function doPostActionWithCookie(postId: string, actionId: string, actionCookie: string, selectedOption = ''): ActionFuncAsync {
+export function doPostActionWithCookie(postId: string, actionId: string, actionCookie: string, selectedOption = '', query?: Record<string, string>, integrationFormat: PostActionIntegrationFormat | '' = ''): ActionFuncAsync {
     return async (dispatch, getState) => {
         let data;
         try {
-            data = await Client4.doPostActionWithCookie(postId, actionId, actionCookie, selectedOption);
+            data = await Client4.doPostActionWithCookie(postId, actionId, actionCookie, selectedOption, query, integrationFormat);
         } catch (error) {
             forceLogoutIfNecessary(error, dispatch, getState);
             dispatch(logError(error));
@@ -1233,13 +1253,6 @@ export function doPostActionWithCookie(postId: string, actionId: string, actionC
                 type: IntegrationTypes.RECEIVED_DIALOG_TRIGGER_ID,
                 data: data.trigger_id,
             });
-            const state = getState();
-            const post = PostSelectors.getPost(state, postId);
-            dispatch({
-                type: IntegrationTypes.RECEIVED_DIALOG_ARGUMENTS,
-                data: {
-                    channel_id: post.channel_id,
-                }});
         }
 
         return {data};
@@ -1282,17 +1295,39 @@ export function moveHistoryIndexForward(index: string): ActionFuncAsync {
     };
 }
 
+export function resetReloadPostsInTranslatedChannels(): ActionFuncAsync {
+    return async (dispatch, getState) => {
+        const state = getState();
+        const channels = getAllChannels(state);
+        for (const channel of Object.values(channels)) {
+            if (!channel.autotranslation) {
+                continue;
+            }
+
+            const myMember = getMyChannelMember(state, channel.id);
+            if (myMember?.autotranslation_disabled) {
+                continue;
+            }
+
+            dispatch(resetReloadPostsInChannel(channel.id));
+        }
+
+        return {data: true};
+    };
+}
+
 /**
  * Ensures thread-replies in channels correctly follow CRT:ON/OFF
  */
-export function resetReloadPostsInChannel(): ActionFuncAsync {
+export function resetReloadPostsInChannel(channelId?: string): ActionFuncAsync {
     return async (dispatch, getState) => {
         dispatch({
             type: PostTypes.RESET_POSTS_IN_CHANNEL,
+            channelId,
         });
 
         const currentChannelId = getCurrentChannelId(getState());
-        if (currentChannelId) {
+        if (currentChannelId && (!channelId || channelId === currentChannelId)) {
             // wait for channel to be fully deselected; prevent stuck loading screen
             // full state-change/reconciliation will cause prefetchChannelPosts to reload posts
             await dispatch(selectChannel('')); // do not remove await

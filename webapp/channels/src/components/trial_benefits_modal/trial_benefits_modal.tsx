@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import moment from 'moment';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, type JSX} from 'react';
 import {FormattedMessage, useIntl} from 'react-intl';
 import {useSelector} from 'react-redux';
 import {matchPath, useLocation} from 'react-router-dom';
@@ -19,7 +19,7 @@ import Carousel from 'components/common/carousel/carousel';
 import useOpenInvitePeopleModal from 'components/common/hooks/useOpenInvitePeopleModal';
 import GuestAccessSvg from 'components/common/svg_images_components/guest_access_svg';
 import MonitorImacLikeSVG from 'components/common/svg_images_components/monitor_imaclike_svg';
-import PersonWithChecklistSvg from 'components/common/svg_images_components/person_with_checklist';
+import PersonWithChecklistSvg from 'components/common/svg_images_components/person_with_checklist_svg';
 import SuccessSvg from 'components/common/svg_images_components/success_svg';
 
 import {ConsolePages, DocLinks, ModalIdentifiers} from 'utils/constants';
@@ -35,7 +35,7 @@ export type Props = {
     onClose?: () => void;
     onExited: () => void;
     trialJustStarted?: boolean;
-}
+};
 
 const TrialBenefitsModal = ({
     onClose,

@@ -146,10 +146,10 @@ describe('ChannelSettingsAccessRulesTab - Activity Warning Integration', () => {
         getChannelMembers: jest.fn().mockResolvedValue({data: []}),
         createJob: jest.fn().mockResolvedValue({data: {}}),
         createAccessControlSyncJob: jest.fn().mockResolvedValue({data: {}}),
-        updateAccessControlPolicyActive: jest.fn().mockResolvedValue({data: {}}),
-        validateExpressionAgainstRequester: jest.fn().mockResolvedValue({data: {requester_matches: true}}),
-        savePreferences: jest.fn().mockResolvedValue({data: {}}),
         updateAccessControlPoliciesActive: jest.fn().mockResolvedValue({data: {}}),
+        validateExpressionAgainstRequester: jest.fn().mockResolvedValue({data: {requester_matches: true}}),
+        simulatePolicyForUsers: jest.fn().mockResolvedValue({data: {results: [], total: 0}}),
+        savePreferences: jest.fn().mockResolvedValue({data: {}}),
     };
 
     const defaultProps = {
@@ -186,8 +186,6 @@ describe('ChannelSettingsAccessRulesTab - Activity Warning Integration', () => {
     };
 
     beforeEach(() => {
-        jest.clearAllMocks();
-
         // Set up default mock implementations
         mockUseChannelAccessControlActions.mockReturnValue(mockActions);
         mockUseChannelSystemPolicies.mockReturnValue({
@@ -202,8 +200,7 @@ describe('ChannelSettingsAccessRulesTab - Activity Warning Integration', () => {
         mockActions.getChannelPolicy.mockResolvedValue({
             data: {
                 id: 'channel_id',
-                rules: [{expression: 'user.department == "Engineering"'}],
-                active: true,
+                rules: [{actions: ['membership'], expression: 'user.department == "Engineering"', metadata: {auto_add: 'always'}}],
             },
         });
 
@@ -277,8 +274,7 @@ describe('ChannelSettingsAccessRulesTab - Activity Warning Integration', () => {
         mockActions.getChannelPolicy.mockResolvedValue({
             data: {
                 id: 'channel_id',
-                rules: [{expression: 'user.department == "Engineering"'}],
-                active: true,
+                rules: [{actions: ['membership'], expression: 'user.department == "Engineering"', metadata: {auto_add: 'always'}}],
             },
         });
 

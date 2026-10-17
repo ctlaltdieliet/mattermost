@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react';
+import React, {type JSX} from 'react';
 import {FormattedMessage} from 'react-intl';
 
 import type {Command} from '@mattermost/types/integrations';
@@ -38,7 +38,7 @@ type Props = {
         // The function to call when Delete link is clicked
         deleteCommand: (id: string) => Promise<ActionResult>;
     };
-}
+};
 
 export default class InstalledCommands extends React.PureComponent<Props> {
     public regenCommandToken = (command: Command): void => {
@@ -88,7 +88,7 @@ export default class InstalledCommands extends React.PureComponent<Props> {
                 header={
                     <FormattedMessage
                         id='installed_commands.header'
-                        defaultMessage='Installed Slash Commands'
+                        defaultMessage='Slash Commands'
                     />
                 }
                 addText={
@@ -102,12 +102,13 @@ export default class InstalledCommands extends React.PureComponent<Props> {
                 emptyText={
                     <FormattedMessage
                         id='installed_commands.empty'
-                        defaultMessage='No slash commands found'
+                        defaultMessage='No commands found'
                     />
                 }
                 emptyTextSearch={
                     <FormattedMessage
                         id='installed_commands.search.empty'
+                        // eslint-disable-next-line formatjs/enforce-placeholders -- searchTerm provided by BackstageList
                         defaultMessage='No slash commands match <b>{searchTerm}</b>'
                         values={{
                             b: (chunks) => <b>{chunks}</b>,

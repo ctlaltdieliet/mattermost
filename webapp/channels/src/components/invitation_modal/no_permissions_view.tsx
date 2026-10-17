@@ -3,20 +3,21 @@
 
 import React from 'react';
 import {Modal} from 'react-bootstrap';
-import {FormattedMessage} from 'react-intl';
+import {FormattedMessage, useIntl} from 'react-intl';
 
-import AccessDeniedSvg from 'components/common/svg_images_components/access_denied_svg';
+import {Button} from '@mattermost/shared/components/button';
+
+import AccessProblemSVG from 'components/common/svg_images_components/access_problem_svg';
 
 import './no_permissions_view.scss';
 
 type Props = {
     footerClass: string;
     onDone: () => void;
-    title?: string;
-    description?: string;
-}
+};
 
 export default function NoPermissionsView(props: Props) {
+    const {formatMessage} = useIntl();
     return (
         <>
             <Modal.Header
@@ -38,25 +39,25 @@ export default function NoPermissionsView(props: Props) {
                             defaultMessage='You do not have permissions to add users or guests. If this seems like an error, please reach out to your system administrator.'
                         />
                     </div>
-                    <AccessDeniedSvg
-                        width={211}
-                        height={156}
+                    <AccessProblemSVG
+                        width={222}
+                        height={136}
                     />
                 </div>
             </Modal.Body>
             <Modal.Footer className={props.footerClass}>
-                <button
+                <Button
                     onClick={props.onDone}
-                    className='btn btn-primary'
+                    emphasis='primary'
                     data-testid='confirm-done'
-                    aria-label='Close'
-                    title='Close'
+                    aria-label={formatMessage({id: 'generic.close', defaultMessage: 'Close'})}
+                    title={formatMessage({id: 'generic.close', defaultMessage: 'Close'})}
                 >
                     <FormattedMessage
                         id='invitation_modal.confirm.done'
                         defaultMessage='Done'
                     />
-                </button>
+                </Button>
             </Modal.Footer>
         </>
     );

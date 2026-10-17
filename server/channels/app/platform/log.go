@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"slices"
 	"time"
 
@@ -45,21 +46,39 @@ func (ps *PlatformService) initLogging() error {
 		}
 	}
 
+	// Validate log and audit file paths before configuring any target. ConfigureTargets opens
+	// the target files, so a check placed after it would already have written outside the root.
+	logPathErr := config.ValidateLogPaths(ps.Config(), ps.getLogRootPath())
+	if logPathErr != nil && config.IsLogPathEnforcementEnabled(ps.Config()) {
+		// At startup this aborts the boot via platform.New. On a config reload it leaves the
+		// previously configured (valid) targets in place, so the offending file is never opened.
+		return logPathErr
+	}
+
 	// configure app logger. This will replace any existing targets with new ones as defined in the config.
 	if err := ps.ConfigureLogger("logging", ps.logger, &ps.Config().LogSettings, config.GetLogFileLocation); err != nil {
 		// if the config is locked then a unit test has already configured and locked the logger; not an error.
 		if !errors.Is(err, mlog.ErrConfigurationLock) {
 			// revert to default logger if the config is invalid
-			mlog.InitGlobalLogger(nil)
+			if !ps.skipGlobalLogger {
+				mlog.InitGlobalLogger(nil)
+			}
 			return err
 		}
 	}
 
-	// redirect default Go logger to app logger.
-	ps.logger.RedirectStdLog(mlog.LvlWarn)
+	if !ps.skipGlobalLogger {
+		// redirect default Go logger to app logger.
+		ps.logger.RedirectStdLog(mlog.LvlWarn)
 
-	// use the app logger as the global logger (eventually remove all instances of global logging).
-	mlog.InitGlobalLogger(ps.logger)
+		// use the app logger as the global logger (eventually remove all instances of global logging).
+		mlog.InitGlobalLogger(ps.logger)
+	}
+
+	// logged after the targets are configured so the line reaches them rather than the default logger
+	if logPathErr != nil {
+		ps.logger.Error(config.LogPathOutsideRootWarning, mlog.Err(logPathErr))
+	}
 
 	return nil
 }
@@ -107,6 +126,16 @@ func (ps *PlatformService) GetLogsSkipSend(rctx request.CTX, page, perPage int, 
 	if *ps.Config().LogSettings.EnableFile {
 		ps.Log().Flush()
 		logFile := config.GetLogFileLocation(*ps.Config().LogSettings.FileLocation)
+
+		// Validate the file path to prevent arbitrary file reads
+		if err := ps.validateLogFilePath(logFile); err != nil {
+			rctx.Logger().Error("Blocked attempt to read log file outside allowed root",
+				mlog.String("path", logFile),
+				mlog.String("config_section", "LogSettings.FileLocation"),
+				mlog.Err(err))
+			return nil, model.NewAppError("getLogs", "api.admin.file_read_error", nil, "", http.StatusForbidden).Wrap(err)
+		}
+
 		file, err := os.Open(logFile)
 		if err != nil {
 			return nil, model.NewAppError("getLogs", "api.admin.file_read_error", nil, "", http.StatusInternalServerError).Wrap(err)
@@ -188,12 +217,22 @@ func (ps *PlatformService) GetLogsSkipSend(rctx request.CTX, page, perPage int, 
 	return lines, nil
 }
 
-func (ps *PlatformService) GetLogFile(_ request.CTX) (*model.FileData, error) {
+func (ps *PlatformService) GetLogFile(rctx request.CTX) (*model.FileData, error) {
 	if !*ps.Config().LogSettings.EnableFile {
 		return nil, errors.New("Unable to retrieve mattermost logs because LogSettings.EnableFile is set to false")
 	}
 
 	mattermostLog := config.GetLogFileLocation(*ps.Config().LogSettings.FileLocation)
+
+	// Validate the file path to prevent arbitrary file reads
+	if err := ps.validateLogFilePath(mattermostLog); err != nil {
+		rctx.Logger().Error("Blocked attempt to read log file outside allowed root",
+			mlog.String("path", mattermostLog),
+			mlog.String("config_section", "LogSettings.FileLocation"),
+			mlog.Err(err))
+		return nil, errors.Wrapf(err, "log file path %s is outside allowed logging directory", mattermostLog)
+	}
+
 	mattermostLogFileData, err := os.ReadFile(mattermostLog)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed read mattermost log file at path %s", mattermostLog)
@@ -205,11 +244,37 @@ func (ps *PlatformService) GetLogFile(_ request.CTX) (*model.FileData, error) {
 	}, nil
 }
 
-func (ps *PlatformService) GetAdvancedLogs(_ request.CTX) ([]*model.FileData, error) {
+// getLogRootPath returns the log root directory, checking the instance override
+// first, then delegating to config.GetLogRootPath (env var / default).
+func (ps *PlatformService) getLogRootPath() string {
+	if ps.logRootPathOverride != "" {
+		if abs, err := filepath.Abs(ps.logRootPathOverride); err == nil {
+			return abs
+		}
+		return ps.logRootPathOverride
+	}
+	return config.GetLogRootPath()
+}
+
+// validateLogFilePath validates that a log file path is within the logging root directory.
+// This prevents arbitrary file read/write vulnerabilities in logging configuration.
+// The logging root is determined by MM_LOG_PATH environment variable or the default logs directory.
+// Used to validate paths when reading logs via GetLogsSkipSend, GetLogFile, and GetAdvancedLogs.
+// The write side is covered separately by config.ValidateLogPaths, which validates every
+// log and audit path in the config on save and before the logger is configured.
+func (ps *PlatformService) validateLogFilePath(filePath string) error {
+	loggingRoot := ps.getLogRootPath()
+
+	return config.ValidateLogFilePath(filePath, loggingRoot)
+}
+
+func (ps *PlatformService) GetAdvancedLogs(rctx request.CTX) ([]*model.FileData, error) {
 	var (
 		rErr *multierror.Error
 		ret  []*model.FileData
 	)
+
+	rctx.Logger().Debug("Advanced logs access requested")
 
 	for name, loggingJSON := range map[string]json.RawMessage{
 		"LogSettings.AdvancedLoggingJSON":               ps.Config().LogSettings.AdvancedLoggingJSON,
@@ -237,6 +302,18 @@ func (ps *PlatformService) GetAdvancedLogs(_ request.CTX) ([]*model.FileData, er
 				rErr = multierror.Append(rErr, errors.Wrapf(err, "error decoding file target options in %s", name))
 				continue
 			}
+
+			// Validate the file path to prevent arbitrary file reads
+			if err := ps.validateLogFilePath(fileOption.Filename); err != nil {
+				rctx.Logger().Error("Blocked attempt to read log file outside allowed root",
+					mlog.String("path", fileOption.Filename),
+					mlog.String("config_section", name),
+					mlog.String("user_id", rctx.Session().UserId),
+					mlog.Err(err))
+				rErr = multierror.Append(rErr, errors.Wrapf(err, "log file path %s in %s is outside allowed logging directory", fileOption.Filename, name))
+				continue
+			}
+
 			data, err := os.ReadFile(fileOption.Filename)
 			if err != nil {
 				rErr = multierror.Append(rErr, errors.Wrapf(err, "failed to read advanced log file at path %s in %s", fileOption.Filename, name))
@@ -251,7 +328,7 @@ func (ps *PlatformService) GetAdvancedLogs(_ request.CTX) ([]*model.FileData, er
 		}
 	}
 
-	return ret, nil
+	return ret, rErr.ErrorOrNil()
 }
 
 func isLogFilteredByLevel(logFilter *model.LogFilter, entry *model.LogEntry) bool {
@@ -268,16 +345,17 @@ func isLogFilteredByDate(rctx request.CTX, logFilter *model.LogFilter, entry *mo
 		return false
 	}
 
-	dateFrom, err := time.Parse("2006-01-02 15:04:05.999 -07:00", logFilter.DateFrom)
+	// Keep parsing aligned with LogFilter.IsValid via the shared layout constant.
+	dateFrom, err := time.Parse(model.LogFilterDateLayout, logFilter.DateFrom)
 	if err != nil {
 		dateFrom = time.Time{}
 	}
-	dateTo, err := time.Parse("2006-01-02 15:04:05.999 -07:00", logFilter.DateTo)
+	dateTo, err := time.Parse(model.LogFilterDateLayout, logFilter.DateTo)
 	if err != nil {
 		dateTo = time.Now()
 	}
 
-	timestamp, err := time.Parse("2006-01-02 15:04:05.999 -07:00", entry.Timestamp)
+	timestamp, err := time.Parse(model.LogFilterDateLayout, entry.Timestamp)
 	if err != nil {
 		rctx.Logger().Debug("Cannot parse timestamp, skipping")
 		return false

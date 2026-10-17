@@ -63,6 +63,10 @@ func (sp *ShareProvider) GetCommand(a *app.App, T i18n.TranslateFunc) *model.Com
 }
 
 func (sp *ShareProvider) GetAutoCompleteListItems(rctx request.CTX, a *app.App, commandArgs *model.CommandArgs, arg *model.AutocompleteArg, parsed, toBeParsed string) ([]model.AutocompleteListItem, error) {
+	if !a.HasPermissionTo(rctx, commandArgs.UserId, model.PermissionManageSharedChannels) {
+		return []model.AutocompleteListItem{}, nil
+	}
+
 	switch {
 	case strings.Contains(parsed, " share "):
 
@@ -123,21 +127,25 @@ func (sp *ShareProvider) getAutoCompleteUnInviteRemote(a *app.App, _ *model.Comm
 }
 
 func (sp *ShareProvider) DoCommand(a *app.App, rctx request.CTX, args *model.CommandArgs, message string) *model.CommandResponse {
-	if !a.HasPermissionTo(args.UserId, model.PermissionManageSharedChannels) {
+	if !a.HasPermissionTo(rctx, args.UserId, model.PermissionManageSharedChannels) {
 		return response(args.T("api.command_share.permission_required", map[string]any{"Permission": "manage_shared_channels"}))
 	}
 
-	syncService := a.Srv().GetSharedChannelSyncService()
-	if syncService == nil || !syncService.Active() {
+	// Only check that the services are non-nil (licensed and configured). Do not check Active()
+	// here because Active() only returns true on the cluster leader node. In HA deployments,
+	// slash commands can be routed to any node via the load balancer, not just the leader.
+	if a.Srv().GetSharedChannelSyncService() == nil {
 		return response(args.T("api.command_share.service_disabled"))
 	}
 
-	rcService := a.Srv().GetRemoteClusterService()
-	if rcService == nil || !rcService.Active() {
+	if a.Srv().GetRemoteClusterService() == nil {
 		return response(args.T("api.command_remote.service_disabled"))
 	}
 
-	margs := parseNamedArgs(args.Command)
+	margs, err := parseNamedArgs(args.T, args.Command)
+	if err != nil {
+		return response(err.Error())
+	}
 	action, ok := margs[ActionKey]
 	if !ok {
 		return response(args.T("api.command_share.missing_action", map[string]any{"Actions": AvailableShareActions}))
@@ -296,7 +304,7 @@ func (sp *ShareProvider) doStatus(a *app.App, args *model.CommandArgs, _ map[str
 		accepted := formatBool(args.T, status.IsInviteAccepted)
 		online := formatBool(args.T, isOnline(status.LastPingAt))
 
-		lastSync := formatTimestamp(status.NextSyncAt)
+		lastSync := formatTimestamp(status.LastSyncAt)
 
 		fmt.Fprintf(&sb, "| %s | %s | %s | %s | %s | %s |\n",
 			status.DisplayName, status.SiteURL, readonly, accepted, online, lastSync)

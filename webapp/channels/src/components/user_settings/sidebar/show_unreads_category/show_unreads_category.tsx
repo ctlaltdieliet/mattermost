@@ -5,7 +5,8 @@ import React from 'react';
 import type {RefObject} from 'react';
 import {FormattedMessage} from 'react-intl';
 
-import type {PreferencesType, PreferenceType} from '@mattermost/types/preferences';
+import {Radio} from '@mattermost/compass-ui/components/radio';
+import type {PreferenceType} from '@mattermost/types/preferences';
 
 import {Preferences} from 'mattermost-redux/constants';
 import type {ActionResult} from 'mattermost-redux/types/actions';
@@ -16,11 +17,7 @@ import type SettingItemMinComponent from 'components/setting_item_min';
 
 import {a11yFocus} from 'utils/utils';
 
-export type OwnProps = {
-    adminMode?: boolean;
-    userId: string;
-    userPreferences?: PreferencesType;
-}
+import type {OwnProps} from './index';
 
 type Props = OwnProps & {
     active: boolean;
@@ -28,16 +25,16 @@ type Props = OwnProps & {
     savePreferences: (userId: string, preferences: PreferenceType[]) => Promise<ActionResult>;
     showUnreadsCategory: boolean;
     updateSection: (section: string) => void;
-}
+};
 
 type State = {
     active: boolean;
     checked: boolean;
     isSaving: boolean;
-}
+};
 
 export default class ShowUnreadsCategory extends React.PureComponent<Props, State> {
-    minRef: RefObject<SettingItemMinComponent>;
+    minRef: RefObject<SettingItemMinComponent | null>;
 
     constructor(props: Props) {
         super(props);
@@ -151,37 +148,29 @@ export default class ShowUnreadsCategory extends React.PureComponent<Props, Stat
                         <legend className='form-legend hidden-label'>
                             {title}
                         </legend>
-                        <div className='radio'>
-                            <label>
-                                <input
-                                    data-testid='showUnreadsCategoryOn'
-                                    type='radio'
-                                    name='showUnreadsCategory'
-                                    checked={this.state.checked}
-                                    onChange={() => this.setState({checked: true})}
-                                />
+                        <div className='settings-radio-group'>
+                            <Radio
+                                data-testid='showUnreadsCategoryOn'
+                                name='showUnreadsCategory'
+                                checked={this.state.checked}
+                                onChange={() => this.setState({checked: true})}
+                            >
                                 <FormattedMessage
                                     id='user.settings.sidebar.on'
                                     defaultMessage='On'
                                 />
-                            </label>
-                            <br/>
-                        </div>
-                        <div className='radio'>
-                            <label>
-                                <input
-                                    data-testid='showUnreadsCategoryOff'
-                                    type='radio'
-                                    name='showUnreadsCategory'
-                                    checked={!this.state.checked}
-                                    onChange={() => this.setState({checked: false})}
-                                />
+                            </Radio>
+                            <Radio
+                                data-testid='showUnreadsCategoryOff'
+                                name='showUnreadsCategory'
+                                checked={!this.state.checked}
+                                onChange={() => this.setState({checked: false})}
+                            >
                                 <FormattedMessage
                                     id='user.settings.sidebar.off'
                                     defaultMessage='Off'
                                 />
-                            </label>
-                            <br/>
+                            </Radio>
                         </div>
                         <div className='mt-5'>
                             <FormattedMessage

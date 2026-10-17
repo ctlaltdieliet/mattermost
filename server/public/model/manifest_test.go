@@ -383,6 +383,7 @@ func TestManifestUnmarshal(t *testing.T) {
 		SupportURL:       "https://example.com/support",
 		IconPath:         "assets/icon.svg",
 		MinServerVersion: "5.6.0",
+		RequiredAddOn:    "theaddon",
 		Server: &ManifestServer{
 			Executable: "theexecutable",
 			Executables: map[string]string{
@@ -426,6 +427,7 @@ homepage_url: https://example.com
 support_url: https://example.com/support
 icon_path: assets/icon.svg
 min_server_version: 5.6.0
+required_add_on: theaddon
 server:
     executable: theexecutable
     executables:
@@ -461,6 +463,7 @@ settings_schema:
 	"support_url": "https://example.com/support",
 	"icon_path": "assets/icon.svg",
 	"min_server_version": "5.6.0",
+	"required_add_on": "theaddon",
 	"server": {
 		"executable": "theexecutable",
 		"executables": {
@@ -603,7 +606,6 @@ func TestManifestClientManifest(t *testing.T) {
 	assert.Equal(t, "/static/theid/theid_000102030405060708090a0b0c0d0e0f_bundle.js", sanitized.Webapp.BundlePath)
 	assert.Equal(t, manifest.Webapp.BundleHash, sanitized.Webapp.BundleHash)
 	assert.Equal(t, manifest.SettingsSchema, sanitized.SettingsSchema)
-	assert.Empty(t, sanitized.Name)
 	assert.Empty(t, sanitized.Description)
 	assert.Empty(t, sanitized.Server)
 

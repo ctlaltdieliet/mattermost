@@ -19,6 +19,16 @@ const (
 	OAuthActionMobile     = "mobile"
 )
 
+// IntuneLoginRequest represents a login request using an MSAL access_token from Azure AD/Entra
+// for Intune MAM authentication. The access_token is used instead of id_token to validate
+// the audience claim against the customer's tenant-specific IntuneScope, ensuring proper
+// tenant isolation.
+type IntuneLoginRequest struct {
+	AccessToken  string `json:"access_token"`
+	DeviceId     string `json:"device_id"`
+	VoIPDeviceId string `json:"voip_device_id,omitempty"`
+}
+
 type OAuthApp struct {
 	Id              string      `json:"id"`
 	CreatorId       string      `json:"creator_id"`
@@ -96,7 +106,13 @@ func (a *OAuthApp) IsValid() *AppError {
 	}
 
 	for _, callback := range a.CallbackUrls {
-		if !IsValidHTTPURL(callback) {
+		// Dynamically registered (DCR) clients may use custom URI schemes such as
+		// cursor://; manually created OAuth apps remain restricted to http/https.
+		valid := IsValidHTTPURL(callback)
+		if a.IsDynamicallyRegistered {
+			valid = IsValidDCRRedirectURI(callback)
+		}
+		if !valid {
 			return NewAppError("OAuthApp.IsValid", "model.oauth.is_valid.callback.app_error", nil, "", http.StatusBadRequest)
 		}
 	}

@@ -44,6 +44,9 @@ func (w *Web) InitOAuth() {
 	w.MainRouter.Handle("/oauth/{service:[A-Za-z0-9]+}/mobile_login", w.APIHandler(mobileLoginWithOAuth)).Methods(http.MethodGet)
 	w.MainRouter.Handle("/oauth/{service:[A-Za-z0-9]+}/signup", w.APIHandler(signupWithOAuth)).Methods(http.MethodGet)
 
+	// Intune MAM authentication endpoint
+	w.MainRouter.Handle("/oauth/intune", w.APIHandler(loginByIntune)).Methods(http.MethodPost)
+
 	// Old endpoints for backwards compatibility, needed to not break SSO for any old setups
 	w.MainRouter.Handle("/api/v3/oauth/{service:[A-Za-z0-9]+}/complete", w.APIHandler(completeOAuth)).Methods(http.MethodGet)
 	w.MainRouter.Handle("/signup/{service:[A-Za-z0-9]+}/complete", w.APIHandler(completeOAuth)).Methods(http.MethodGet)
@@ -99,6 +102,12 @@ func deauthorizeOAuthApp(c *Context, w http.ResponseWriter, r *http.Request) {
 
 	if !model.IsValidId(clientId) {
 		c.SetInvalidParam("client_id")
+		return
+	}
+
+	if c.AppContext.Session().IsOAuth {
+		c.SetPermissionError(model.PermissionEditOtherUsers)
+		c.Err.DetailedError += ", attempted access by oauth app"
 		return
 	}
 
@@ -358,7 +367,8 @@ func completeOAuth(c *Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := c.App.CompleteOAuth(c.AppContext, service, body, props, tokenUser)
+	user, userCreated, err := c.App.CompleteOAuth(c.AppContext, service, body, props, tokenUser)
+	auditRec.AddMeta("user_created", userCreated)
 	if err != nil {
 		err.Translate(c.AppContext.T)
 		c.LogErrorByCode(err)
@@ -400,7 +410,8 @@ func completeOAuth(c *Context, w http.ResponseWriter, r *http.Request) {
 			redirectURL = utils.AppendQueryParamsToURL(c.GetSiteURLHeader()+"/login/desktop", queryString)
 
 			auditRec.Success()
-			c.LogAudit("success")
+			auditRec.Actor.UserId = user.Id
+			c.LogAuditWithUserId(user.Id, "authenticated")
 
 			w.Header().Set("Content-Type", "text/html; charset=utf-8")
 			http.Redirect(w, r, redirectURL, http.StatusTemporaryRedirect)
@@ -409,7 +420,10 @@ func completeOAuth(c *Context, w http.ResponseWriter, r *http.Request) {
 
 		isOAuthUser := user.IsOAuthUser()
 
-		session, err := c.App.DoLogin(c.AppContext, w, r, user, "", isMobile, isOAuthUser, false)
+		session, err := c.App.DoLogin(c.AppContext, w, r, user, model.LoginOptions{
+			IsMobile:    isMobile,
+			IsOAuthUser: isOAuthUser,
+		})
 		if err != nil {
 			err.Translate(c.AppContext.T)
 			c.Logger.Error(err.Error())
@@ -432,6 +446,7 @@ func completeOAuth(c *Context, w http.ResponseWriter, r *http.Request) {
 			redirectURL = utils.AppendQueryParamsToURL(redirectURL, map[string]string{
 				model.SessionCookieToken: c.AppContext.Session().Token,
 				model.SessionCookieCsrf:  c.AppContext.Session().GetCSRF(),
+				"srv":                    c.App.GetSiteURL(), // Server URL for mobile client verification
 			})
 			utils.RenderMobileAuthComplete(w, redirectURL)
 
@@ -461,9 +476,11 @@ func loginWithOAuth(c *Context, w http.ResponseWriter, r *http.Request) {
 	redirectURL := r.URL.Query().Get("redirect_to")
 	desktopToken := r.URL.Query().Get("desktop_token")
 
-	if redirectURL != "" && !utils.IsValidWebAuthRedirectURL(c.App.Config(), redirectURL) {
-		c.Err = model.NewAppError("loginWithOAuth", "api.invalid_redirect_url", nil, "", http.StatusBadRequest)
-		return
+	if redirectURL != "" {
+		if err := utils.ValidateWebAuthRedirectUrl(c.App.Config(), redirectURL); err != nil {
+			c.Err = model.NewAppError("loginWithOAuth", "api.invalid_redirect_url", nil, err.Error(), http.StatusBadRequest)
+			return
+		}
 	}
 
 	auditRec := c.MakeAuditRecord(model.AuditEventLoginWithOAuth, model.AuditStatusFail)
@@ -528,7 +545,7 @@ func signupWithOAuth(c *Context, w http.ResponseWriter, r *http.Request) {
 
 	if !*c.App.Config().TeamSettings.EnableUserCreation {
 		utils.RenderWebError(c.App.Config(), w, r, http.StatusBadRequest, url.Values{
-			"message": []string{i18n.T("api.oauth.singup_with_oauth.disabled.app_error")},
+			"message": []string{i18n.T("api.oauth.signup_with_oauth.disabled.app_error")},
 		}, c.App.AsymmetricSigningKey())
 		return
 	}
@@ -555,6 +572,18 @@ func signupWithOAuth(c *Context, w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, authURL, http.StatusFound)
 }
 
+// pathWithinPrefix reports whether target is at or under prefix, comparing on
+// path segments so /mmfoo is not treated as under /mm. An empty or "/" prefix
+// (root SiteURL) matches the root and any absolute path.
+func pathWithinPrefix(target, prefix string) bool {
+	target = path.Clean(target)
+	prefix = path.Clean(prefix)
+	if prefix == "." || prefix == "/" {
+		return target == "." || strings.HasPrefix(target, "/")
+	}
+	return target == prefix || strings.HasPrefix(target, prefix+"/")
+}
+
 func fullyQualifiedRedirectURL(siteURLPrefix, targetURL string, otherValidSchemes []string) string {
 	parsed, err := url.Parse(targetURL)
 	if err != nil {
@@ -575,7 +604,7 @@ func fullyQualifiedRedirectURL(siteURLPrefix, targetURL string, otherValidScheme
 	// Check if the targetURL is valid and within the siteURLPrefix, excluding native app schemes like mmauth://
 	sameScheme := parsed.Scheme == prefixParsed.Scheme
 	sameHost := parsed.Host == prefixParsed.Host
-	safePath := strings.HasPrefix(path.Clean(parsed.Path), path.Clean(prefixParsed.Path))
+	safePath := pathWithinPrefix(parsed.Path, prefixParsed.Path)
 
 	if sameScheme && sameHost && safePath {
 		return targetURL
@@ -602,7 +631,7 @@ func fullyQualifiedRedirectURL(siteURLPrefix, targetURL string, otherValidScheme
 		return siteURLPrefix
 	}
 
-	if !strings.HasPrefix(path.Clean(parsed.Path), path.Clean(prefixParsed.Path)) {
+	if !pathWithinPrefix(parsed.Path, prefixParsed.Path) {
 		return siteURLPrefix
 	}
 
@@ -623,5 +652,65 @@ func getAuthorizationServerMetadata(c *Context, w http.ResponseWriter, r *http.R
 
 	if err := json.NewEncoder(w).Encode(metadata); err != nil {
 		c.Logger.Warn("Error writing authorization server metadata response", mlog.Err(err))
+	}
+}
+
+// loginByIntune handles authentication using Microsoft Intune MAM with Entra ID tokens
+func loginByIntune(c *Context, w http.ResponseWriter, r *http.Request) {
+	var req model.IntuneLoginRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		c.SetInvalidParamWithErr("request_body", err)
+		return
+	}
+
+	if req.AccessToken == "" {
+		c.SetInvalidParam("access_token")
+		return
+	}
+
+	if req.VoIPDeviceId != "" && !model.IsValidVoIPDeviceId(req.VoIPDeviceId) {
+		c.SetInvalidParam("voip_device_id")
+		return
+	}
+
+	auditRec := c.MakeAuditRecord("login_by_intune", model.AuditStatusFail)
+	defer c.LogAuditRec(auditRec)
+	c.LogAudit("attempt")
+
+	// Authenticate user via Intune MAM
+	user, err := c.App.LoginByIntune(c.AppContext, req.AccessToken)
+	if err != nil {
+		c.Err = err
+		return
+	}
+
+	auditRec.AddMeta("obtained_user_id", user.Id)
+	c.LogAuditWithUserId(user.Id, "obtained user")
+
+	model.AddEventParameterToAuditRec(auditRec, "device_id", req.DeviceId)
+	model.AddEventParameterToAuditRec(auditRec, "voip_device_id", req.VoIPDeviceId)
+
+	session, err := c.App.DoLogin(c.AppContext, w, r, user, model.LoginOptions{
+		DeviceId:     req.DeviceId,
+		VoIPDeviceId: req.VoIPDeviceId,
+		IsOAuthUser:  true,
+	})
+	if err != nil {
+		c.Err = err
+		return
+	}
+
+	c.AppContext = c.AppContext.WithSession(session)
+
+	c.App.AttachSessionCookies(c.AppContext, w, r)
+
+	auditRec.Success()
+	c.LogAuditWithUserId(user.Id, "success")
+
+	user.Sanitize(map[string]bool{})
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(user); err != nil {
+		c.Logger.Warn("Failed to encode user response", mlog.Err(err))
 	}
 }

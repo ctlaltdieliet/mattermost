@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {memo, useCallback, useMemo} from 'react';
+import React, {memo, useCallback, useMemo, type JSX} from 'react';
 import {FormattedMessage, useIntl} from 'react-intl';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -47,7 +47,7 @@ const SidebarCategoryMenu = ({
 }: Props) => {
     const dispatch = useDispatch();
     const showUnreadsCategory = useSelector(shouldShowUnreadsCategory);
-    const getUnreadsIdsForCategory = useMemo(makeGetUnreadIdsForCategory, [category]);
+    const getUnreadsIdsForCategory = useMemo(() => makeGetUnreadIdsForCategory(), []);
     const unreadsIds = useSelector((state: GlobalState) => getUnreadsIdsForCategory(state, category));
     const {formatMessage} = useIntl();
 
@@ -158,7 +158,7 @@ const SidebarCategoryMenu = ({
         sortChannelsSelectedValue = (
             <FormattedMessage
                 id='user.settings.sidebar.recent'
-                defaultMessage='Recent Activity'
+                defaultMessage='Recent activity'
             />
         );
         sortChannelsIcon = <ClockOutlineIcon size={18}/>;
@@ -199,7 +199,7 @@ const SidebarCategoryMenu = ({
                 labels={(
                     <FormattedMessage
                         id='sidebar.sortedByRecencyLabel'
-                        defaultMessage='Recent Activity'
+                        defaultMessage='Recent activity'
                     />
                 )}
                 onClick={() => handleSortChannels(CategorySorting.Recency)}

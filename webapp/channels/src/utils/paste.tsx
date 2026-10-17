@@ -161,6 +161,10 @@ export function formatMarkdownLinkMessage({message, clipboardData, selectionStar
 }
 
 export function isKnownTargetForPaste(event: ClipboardEvent, location: string, isInEditMode?: boolean): boolean {
+    if ((event.target as HTMLElement)?.isContentEditable) {
+        return false;
+    }
+
     let isKnownTarget = false;
 
     if (isInEditMode) {
@@ -176,7 +180,7 @@ export function isKnownTargetForPaste(event: ClipboardEvent, location: string, i
     return isKnownTarget;
 }
 
-export function pasteHandler(event: ClipboardEvent, location: string, message: string, isNonFormattedPaste: boolean, caretPosition?: number, isInEditMode?: boolean) {
+export function pasteHandler(event: ClipboardEvent, location: string, message: string, isNonFormattedPaste: boolean, isInEditMode?: boolean) {
     const isKnownTarget = isKnownTargetForPaste(event, location, isInEditMode);
     if (!isKnownTarget || isNonFormattedPaste) {
         return;
@@ -211,7 +215,7 @@ export function pasteHandler(event: ClipboardEvent, location: string, message: s
         const {formattedCodeBlock} = formatGithubCodePaste({selectionStart, selectionEnd, message, clipboardData});
         execCommandInsertText(formattedCodeBlock);
     } else {
-        const {formattedMarkdown} = formatMarkdownMessage(clipboardData, message, caretPosition);
+        const {formattedMarkdown} = formatMarkdownMessage(clipboardData, message, selectionStart ?? message.length);
         execCommandInsertText(formattedMarkdown);
     }
 }

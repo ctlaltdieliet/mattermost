@@ -7,7 +7,6 @@
 // - Use element ID when selecting an element. Create one if none.
 // ***************************************************************
 
-// Stage: @prod
 // Group: @channels @notification
 
 describe('Verify users can receive notification on browser', () => {
@@ -76,7 +75,7 @@ describe('Verify users can receive notification on browser', () => {
         cy.stubNotificationPermission('granted');
 
         cy.window().then((win) => {
-            win.Notification = function() {
+            (win as any).Notification = function() {
                 // Do nothing to simulate Focus Mode
             };
 
@@ -107,7 +106,7 @@ describe('Verify users can receive notification on browser', () => {
         // # Set Desktop Notification preference to Nothing
         cy.get('#CustomizeYourExperienceTour > button').click();
         cy.get('#desktopAndMobileTitle').click();
-        cy.get('#sendDesktopNotificationsSection input[type=radio]').last().check();
+        cy.get('#sendDesktopNotificationsSection input[type=radio]').last().check({force: true});
         cy.get('#saveSetting').click();
         cy.wait(500);
         triggertestNotification();

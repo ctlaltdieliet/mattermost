@@ -1,21 +1,22 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import classNames from 'classnames';
-import deepEqual from 'fast-deep-equal';
 import React, {lazy} from 'react';
 import {Route, Switch, Redirect} from 'react-router-dom';
 import type {RouteComponentProps} from 'react-router-dom';
+
+import {isAndroid, isChromebook, isDesktopApp, isIos} from '@mattermost/shared/utils/user_agent';
 
 import {setSystemEmojis} from 'mattermost-redux/actions/emojis';
 import {setUrl} from 'mattermost-redux/actions/general';
 import {Client4} from 'mattermost-redux/client';
 
-import {temporarilySetPageLoadContext} from 'actions/telemetry_actions.jsx';
+import {temporarilySetPageLoadContext} from 'actions/telemetry_actions';
 import BrowserStore from 'stores/browser_store';
 
 import {makeAsyncComponent, makeAsyncPluggableComponent} from 'components/async_load';
-import GlobalHeader from 'components/global_header/global_header';
+import GlobalClassificationBanner from 'components/global_classification_banner';
+import GlobalHeader from 'components/global_header';
 import {HFRoute} from 'components/header_footer_route/header_footer_route';
 import {HFTRoute, LoggedInHFTRoute} from 'components/header_footer_template_route';
 import InitialLoadingScreen from 'components/initial_loading_screen';
@@ -23,18 +24,20 @@ import LoggedIn from 'components/logged_in';
 import LoggedInRoute from 'components/logged_in_route';
 import {LAUNCHING_WORKSPACE_FULLSCREEN_Z_INDEX} from 'components/preparing_workspace/launching_workspace';
 import {Animations} from 'components/preparing_workspace/steps';
+import ProductPluggable from 'components/product_pluggable';
 import Readout from 'components/readout/readout';
+import {WithUserTheme} from 'components/theme_provider';
 
-import webSocketClient from 'client/web_websocket_client';
 import {initializePlugins} from 'plugins';
 import 'utils/a11y_controller_instance';
+import {expirationScheduler} from 'utils/burn_on_read_expiration_scheduler';
 import {PageLoadContext, SCHEDULED_POST_URL_SUFFIX} from 'utils/constants';
 import DesktopApp from 'utils/desktop_api';
 import {EmojiIndicesByAlias} from 'utils/emoji';
 import {TEAM_NAME_PATH_PATTERN} from 'utils/path';
+import {isTeamScopedProduct} from 'utils/products';
 import {getSiteURL} from 'utils/url';
-import {isAndroidWeb, isChromebook, isDesktopApp, isIosWeb} from 'utils/user_agent';
-import {applyTheme, isTextDroppableEvent} from 'utils/utils';
+import {isTextDroppableEvent} from 'utils/utils';
 
 import LuxonController from './luxon_controller';
 import PerformanceReporterController from './performance_reporter_controller';
@@ -49,7 +52,6 @@ const MobileViewWatcher = makeAsyncComponent('MobileViewWatcher', lazy(() => imp
 const WindowSizeObserver = makeAsyncComponent('WindowSizeObserver', lazy(() => import('components/window_size_observer/WindowSizeObserver')));
 const ErrorPage = makeAsyncComponent('ErrorPage', lazy(() => import('components/error_page')));
 const Login = makeAsyncComponent('LoginController', lazy(() => import('components/login/login')));
-const AccessProblem = makeAsyncComponent('AccessProblem', lazy(() => import('components/access_problem')));
 const PasswordResetSendLink = makeAsyncComponent('PasswordResedSendLink', lazy(() => import('components/password_reset_send_link')));
 const PasswordResetForm = makeAsyncComponent('PasswordResetForm', lazy(() => import('components/password_reset_form')));
 const Signup = makeAsyncComponent('SignupController', lazy(() => import('components/signup/signup')));
@@ -75,10 +77,11 @@ const ModalController = makeAsyncComponent('ModalController', lazy(() => import(
 const AppBar = makeAsyncComponent('AppBar', lazy(() => import('components/app_bar/app_bar')));
 const ComponentLibrary = makeAsyncComponent('ComponentLibrary', lazy(() => import('components/component_library')));
 const PopoutController = makeAsyncComponent('PopoutController', lazy(() => import('components/popout_controller')));
+const Help = makeAsyncComponent('Help', lazy(() => import('components/help')));
 
 const Pluggable = makeAsyncPluggableComponent();
 
-export type Props = PropsFromRedux & RouteComponentProps
+export type Props = PropsFromRedux & RouteComponentProps;
 
 interface State {
     shouldMountAppRoutes?: boolean;
@@ -113,8 +116,6 @@ export default class Root extends React.PureComponent<Props, State> {
         this.props.actions.migrateRecentEmojis();
         this.props.actions.loadRecentlyUsedCustomEmojis();
         this.showLandingPageIfNecessary();
-
-        this.applyTheme();
     };
 
     private showLandingPageIfNecessary = () => {
@@ -130,12 +131,12 @@ export default class Root extends React.PureComponent<Props, State> {
         }
 
         // Nothing to link to if we've removed the Android App download link
-        if (isAndroidWeb() && !this.props.androidDownloadLink) {
+        if (isAndroid() && !this.props.androidDownloadLink) {
             return;
         }
 
         // Nothing to link to if we've removed the iOS App download link
-        if (isIosWeb() && !this.props.iosDownloadLink) {
+        if (isIos() && !this.props.iosDownloadLink) {
             return;
         }
 
@@ -178,21 +179,7 @@ export default class Root extends React.PureComponent<Props, State> {
         BrowserStore.setLandingPageSeen(true);
     };
 
-    applyTheme() {
-        // don't apply theme when in system console; system console hardcoded to THEMES.denim
-        // AdminConsole will apply denim on mount re-apply user theme on unmount
-        if (this.props.location.pathname.startsWith('/admin_console')) {
-            return;
-        }
-
-        applyTheme(this.props.theme);
-    }
-
     componentDidUpdate(prevProps: Props, prevState: State) {
-        if (!deepEqual(prevProps.theme, this.props.theme)) {
-            this.applyTheme();
-        }
-
         if (this.props.location.pathname === '/') {
             if (this.props.noAccounts) {
                 prevProps.history.push('/signup_user_complete');
@@ -278,6 +265,9 @@ export default class Root extends React.PureComponent<Props, State> {
 
         this.initiateMeRequests();
 
+        // Initialize burn-on-read expiration scheduler
+        expirationScheduler.initialize(this.props.dispatch);
+
         // Force logout of all tabs if one tab is logged out
         window.addEventListener('storage', this.handleLogoutLoginSignal);
 
@@ -288,6 +278,9 @@ export default class Root extends React.PureComponent<Props, State> {
     }
 
     componentWillUnmount() {
+        // Cleanup burn-on-read expiration scheduler
+        expirationScheduler.cleanup();
+
         window.removeEventListener('storage', this.handleLogoutLoginSignal);
         document.removeEventListener('drop', this.handleDropEvent);
         document.removeEventListener('dragover', this.handleDragOverEvent);
@@ -328,10 +321,6 @@ export default class Root extends React.PureComponent<Props, State> {
                         path={'/login'}
                         component={Login}
                     />
-                    <HFRoute
-                        path={'/access_problem'}
-                        component={AccessProblem}
-                    />
                     <HFTRoute
                         path={'/reset_password'}
                         component={PasswordResetSendLink}
@@ -359,6 +348,10 @@ export default class Root extends React.PureComponent<Props, State> {
                     <LoggedInRoute
                         path={'/terms_of_service'}
                         component={TermsOfService}
+                    />
+                    <Route
+                        path={'/help/:page?'}
+                        component={Help}
                     />
                     <Route
                         path={'/landing'}
@@ -413,7 +406,7 @@ export default class Root extends React.PureComponent<Props, State> {
                         path={'/_popout'}
                         component={PopoutController}
                     />
-                    <>
+                    <WithUserTheme>
                         {(this.props.showLaunchingWorkspace && !this.props.location.pathname.includes('/preparing-workspace') &&
                             <LaunchingWorkspace
                                 fullscreen={true}
@@ -425,6 +418,7 @@ export default class Root extends React.PureComponent<Props, State> {
 
                         <WindowSizeObserver/>
                         <ModalController/>
+                        <GlobalClassificationBanner position='top'/>
                         <AnnouncementBarController/>
                         <SystemNotice/>
                         <GlobalHeader/>
@@ -449,33 +443,15 @@ export default class Root extends React.PureComponent<Props, State> {
                                         }}
                                     />
                                 ))}
-                                {this.props.products?.map((product) => (
+                                {this.props.products?.filter((product) => !isTeamScopedProduct(product)).map((product) => (
                                     <Route
                                         key={product.id}
                                         path={product.baseURL}
-                                        render={(props) => {
-                                            let pluggable = (
-                                                <Pluggable
-                                                    pluggableName={'Product'}
-                                                    subComponentName={'mainComponent'}
-                                                    pluggableId={product.id}
-                                                    webSocketClient={webSocketClient}
-                                                    css={product.wrapped ? undefined : {gridArea: 'center'}}
-                                                />
-                                            );
-                                            if (product.wrapped) {
-                                                pluggable = (
-                                                    <div className={classNames(['product-wrapper', {wide: !product.showTeamSidebar}])}>
-                                                        {pluggable}
-                                                    </div>
-                                                );
-                                            }
-                                            return (
-                                                <LoggedIn {...props}>
-                                                    {pluggable}
-                                                </LoggedIn>
-                                            );
-                                        }}
+                                        render={(props) => (
+                                            <LoggedIn {...props}>
+                                                <ProductPluggable product={product}/>
+                                            </LoggedIn>
+                                        )}
                                     />
                                 ))}
                                 {this.props.plugins?.map((plugin) => (
@@ -499,10 +475,11 @@ export default class Root extends React.PureComponent<Props, State> {
                             </Switch>
                             <SidebarRight/>
                         </div>
+                        <GlobalClassificationBanner position='bottom'/>
                         <Pluggable pluggableName='Global'/>
                         <AppBar/>
                         <Readout/>
-                    </>
+                    </WithUserTheme>
                 </Switch>
             </RootProvider>
         );
@@ -512,7 +489,7 @@ export default class Root extends React.PureComponent<Props, State> {
 export function doesRouteBelongToTeamControllerRoutes(pathname: RouteComponentProps['location']['pathname']): boolean {
     // Note: we have specifically added admin_console to the negative lookahead as admin_console can have integrations as subpaths (admin_console/integrations/bot_accounts)
     // and we don't want to treat those as team controller routes.
-    const TEAM_CONTROLLER_PATH_PATTERN = new RegExp(`^/(?!admin_console)([a-z0-9\\-_]+)/(channels|messages|threads|drafts|integrations|emoji|${SCHEDULED_POST_URL_SUFFIX})(/.*)?$`);
+    const TEAM_CONTROLLER_PATH_PATTERN = new RegExp(`^/(?!admin_console)([a-z0-9\\-_]+)/(channels|messages|threads|recaps|drafts|integrations|emoji|${SCHEDULED_POST_URL_SUFFIX})(/.*)?$`);
 
     return TEAM_CONTROLLER_PATH_PATTERN.test(pathname);
 }

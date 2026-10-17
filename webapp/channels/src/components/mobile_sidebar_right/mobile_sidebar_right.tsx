@@ -2,7 +2,8 @@
 // See LICENSE.txt for license information.
 
 import classNames from 'classnames';
-import React, {memo} from 'react';
+import React, {memo, useEffect, useRef} from 'react';
+import {useIntl} from 'react-intl';
 import {CSSTransition} from 'react-transition-group';
 
 import useGetUsageDeltas from 'components/common/hooks/useGetUsageDeltas';
@@ -20,7 +21,16 @@ const MobileRightDrawer = ({
     isOpen,
     currentUser,
 }: Props) => {
+    const {formatMessage} = useIntl();
     const usageDeltas = useGetUsageDeltas();
+    const sidebarRef = useRef<HTMLDivElement>(null);
+    const drawerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (isOpen && sidebarRef.current) {
+            sidebarRef.current.focus();
+        }
+    }, [isOpen]);
 
     if (!currentUser) {
         return null;
@@ -28,21 +38,29 @@ const MobileRightDrawer = ({
 
     return (
         <div
+            ref={sidebarRef}
             className={classNames('sidebar--menu', {'move--left': isOpen})}
             id='sidebar-menu'
+            tabIndex={-1}
+            role='dialog'
+            aria-modal='true'
+            aria-label={formatMessage({id: 'accessibility.mobile_menu', defaultMessage: 'Mobile menu'})}
         >
             <div className='nav-pills__container mobile-main-menu'>
                 <CSSTransition
                     in={isOpen}
+                    nodeRef={drawerRef}
                     enter={true}
                     exit={true}
                     mountOnEnter={true}
                     unmountOnExit={true}
                     timeout={TRANSITION_TIMEOUT}
                 >
-                    <MobileRightDrawerItems
-                        usageDeltaTeams={usageDeltas.teams.active}
-                    />
+                    <div ref={drawerRef}>
+                        <MobileRightDrawerItems
+                            usageDeltaTeams={usageDeltas.teams.active}
+                        />
+                    </div>
                 </CSSTransition>
             </div>
         </div>

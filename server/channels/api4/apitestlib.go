@@ -5,10 +5,11 @@ package api4
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
-	"math/rand"
+	"math/rand/v2"
 	"net"
 	"net/http"
 	"os"
@@ -20,6 +21,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	sq "github.com/mattermost/squirrel"
 	s3 "github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/stretchr/testify/require"
@@ -104,10 +106,16 @@ func setupTestHelper(tb testing.TB, dbStore store.Store, sqlSettings *model.SqlS
 	// Check for environment variable override for console log level (useful for debugging tests)
 	consoleLevel := os.Getenv("MM_LOGSETTINGS_CONSOLELEVEL")
 	if consoleLevel == "" {
-		consoleLevel = mlog.LvlStdLog.Name
+		consoleLevel = mlog.LvlDebug.Name
 	}
 	*memoryConfig.LogSettings.ConsoleLevel = consoleLevel
-	*memoryConfig.LogSettings.FileLocation = filepath.Join(tempWorkspace, "logs", "mattermost.log")
+	// Use a subdirectory within the logging root (from MM_LOG_PATH or default)
+	// to ensure the path is within the allowed logging root for security validation.
+	// Each test gets its own subdirectory based on the tempWorkspace name for isolation.
+	testLogsDir := filepath.Join(config.GetLogRootPath(), filepath.Base(tempWorkspace))
+	err = os.MkdirAll(testLogsDir, 0700)
+	require.NoError(tb, err, "failed to create test logs directory")
+	*memoryConfig.LogSettings.FileLocation = testLogsDir
 	*memoryConfig.AnnouncementSettings.AdminNoticesEnabled = false
 	*memoryConfig.AnnouncementSettings.UserNoticesEnabled = false
 	*memoryConfig.PluginSettings.AutomaticPrepackagedPlugins = false
@@ -160,7 +168,7 @@ func setupTestHelper(tb testing.TB, dbStore store.Store, sqlSettings *model.SqlS
 	require.NoError(tb, err, "failed to add writer target to test logger")
 	// lock logger config so server init cannot override it during testing.
 	testLogger.LockConfiguration()
-	options = append(options, app.SetLogger(testLogger))
+	options = append(options, app.SetLogger(testLogger), app.DisableGlobalLogger())
 
 	s, err := app.NewServer(options...)
 	require.NoError(tb, err)
@@ -195,13 +203,6 @@ func setupTestHelper(tb testing.TB, dbStore store.Store, sqlSettings *model.SqlS
 
 		*cfg.TeamSettings.EnableOpenServer = true
 
-		// Disable strict password requirements for test
-		*cfg.PasswordSettings.MinimumLength = 5
-		*cfg.PasswordSettings.Lowercase = false
-		*cfg.PasswordSettings.Uppercase = false
-		*cfg.PasswordSettings.Symbol = false
-		*cfg.PasswordSettings.Number = false
-
 		*cfg.ServiceSettings.ListenAddress = "localhost:0"
 	})
 
@@ -227,8 +228,8 @@ func setupTestHelper(tb testing.TB, dbStore store.Store, sqlSettings *model.SqlS
 	// Verify handling of the supported true/false values by randomizing on each run.
 	trueValues := []string{"1", "t", "T", "TRUE", "true", "True"}
 	falseValues := []string{"0", "f", "F", "FALSE", "false", "False"}
-	trueString := trueValues[rand.Intn(len(trueValues))]
-	falseString := falseValues[rand.Intn(len(falseValues))]
+	trueString := trueValues[rand.IntN(len(trueValues))]
+	falseString := falseValues[rand.IntN(len(falseValues))]
 	testLogger.Debug("Configured Client4 bool string values", mlog.String("true", trueString), mlog.String("false", falseString))
 	th.Client.SetBoolString(true, trueString)
 	th.Client.SetBoolString(false, falseString)
@@ -369,7 +370,7 @@ func SetupConfigWithStoreMock(tb testing.TB, updateConfig func(cfg *model.Config
 }
 
 func SetupWithStoreMock(tb testing.TB) *TestHelper {
-	th := setupTestHelper(tb, testlib.GetMockStoreForSetupFunctions(), nil, nil, false, false, nil, nil)
+	th := setupTestHelper(tb, testlib.GetMockStoreForSetupFunctions(), nil, nil, false, false, useCustomPushNotificationServer, nil)
 	statusMock := mocks.StatusStore{}
 	statusMock.On("UpdateExpiredDNDStatuses").Return([]*model.Status{}, nil)
 	statusMock.On("Get", "user1").Return(&model.Status{UserId: "user1", Status: model.StatusOnline}, nil)
@@ -382,10 +383,15 @@ func SetupWithStoreMock(tb testing.TB) *TestHelper {
 	return th
 }
 
+func useCustomPushNotificationServer(config *model.Config) {
+	*config.EmailSettings.PushNotificationServer = "https://push.example.com"
+}
+
 func SetupEnterpriseWithStoreMock(tb testing.TB, options ...app.Option) *TestHelper {
 	removeSpuriousErrors := func(config *model.Config) {
 		// If not set, you will receive an unactionable error in the console
 		*config.ServiceSettings.SiteURL = "http://localhost:8065"
+		useCustomPushNotificationServer(config)
 	}
 
 	th := setupTestHelper(tb, testlib.GetMockStoreForSetupFunctions(), nil, nil, true, false, removeSpuriousErrors, options)
@@ -412,6 +418,22 @@ func SetupWithServerOptions(tb testing.TB, options []app.Option) *TestHelper {
 
 	dbStore, dbSettings, searchEngine := setupStores(tb)
 	th := setupTestHelper(tb, dbStore, dbSettings, searchEngine, false, true, nil, options)
+	th.InitLogin(tb)
+
+	return th
+}
+
+func SetupWithServerOptionsAndConfig(tb testing.TB, options []app.Option, updateConfig func(*model.Config)) *TestHelper {
+	if testing.Short() {
+		tb.SkipNow()
+	}
+
+	if mainHelper == nil {
+		tb.SkipNow()
+	}
+
+	dbStore, dbSettings, searchEngine := setupStores(tb)
+	th := setupTestHelper(tb, dbStore, dbSettings, searchEngine, false, true, updateConfig, options)
 	th.InitLogin(tb)
 
 	return th
@@ -465,37 +487,42 @@ func (th *TestHelper) InitLogin(tb testing.TB) *TestHelper {
 	th.waitForConnectivity(tb)
 
 	th.SystemAdminUser = th.CreateUser(tb)
+	systemAdminPassword := th.SystemAdminUser.Password
 	_, appErr := th.App.UpdateUserRoles(th.Context, th.SystemAdminUser.Id, model.SystemUserRoleId+" "+model.SystemAdminRoleId, false)
 	require.Nil(tb, appErr)
-	th.SystemAdminUser, appErr = th.App.GetUser(th.SystemAdminUser.Id)
+	th.SystemAdminUser, appErr = th.App.GetUser(th.Context, th.SystemAdminUser.Id)
 	require.Nil(tb, appErr)
 
 	th.SystemManagerUser = th.CreateUser(tb)
+	systemManagerPassword := th.SystemManagerUser.Password
 	_, appErr = th.App.UpdateUserRoles(th.Context, th.SystemManagerUser.Id, model.SystemUserRoleId+" "+model.SystemManagerRoleId, false)
 	require.Nil(tb, appErr)
-	th.SystemManagerUser, appErr = th.App.GetUser(th.SystemManagerUser.Id)
+	th.SystemManagerUser, appErr = th.App.GetUser(th.Context, th.SystemManagerUser.Id)
 	require.Nil(tb, appErr)
 
 	th.TeamAdminUser = th.CreateUser(tb)
+	teamAdminPassword := th.TeamAdminUser.Password
 	_, appErr = th.App.UpdateUserRoles(th.Context, th.TeamAdminUser.Id, model.SystemUserRoleId, false)
 	require.Nil(tb, appErr)
-	th.TeamAdminUser, appErr = th.App.GetUser(th.TeamAdminUser.Id)
+	th.TeamAdminUser, appErr = th.App.GetUser(th.Context, th.TeamAdminUser.Id)
 	require.Nil(tb, appErr)
 
 	th.BasicUser = th.CreateUser(tb)
-	th.BasicUser, appErr = th.App.GetUser(th.BasicUser.Id)
+	basicUserPassword := th.BasicUser.Password
+	th.BasicUser, appErr = th.App.GetUser(th.Context, th.BasicUser.Id)
 	require.Nil(tb, appErr)
 
 	th.BasicUser2 = th.CreateUser(tb)
-	th.BasicUser2, appErr = th.App.GetUser(th.BasicUser2.Id)
+	basicUser2Password := th.BasicUser2.Password
+	th.BasicUser2, appErr = th.App.GetUser(th.Context, th.BasicUser2.Id)
 	require.Nil(tb, appErr)
 
-	// restore non hashed password for login
-	th.SystemAdminUser.Password = "Pa$$word11"
-	th.TeamAdminUser.Password = "Pa$$word11"
-	th.BasicUser.Password = "Pa$$word11"
-	th.BasicUser2.Password = "Pa$$word11"
-	th.SystemManagerUser.Password = "Pa$$word11"
+	// restore non-hashed password for login
+	th.SystemAdminUser.Password = systemAdminPassword
+	th.SystemManagerUser.Password = systemManagerPassword
+	th.TeamAdminUser.Password = teamAdminPassword
+	th.BasicUser.Password = basicUserPassword
+	th.BasicUser2.Password = basicUser2Password
 
 	var wg sync.WaitGroup
 	wg.Add(2)
@@ -687,13 +714,13 @@ func (th *TestHelper) CreateUserWithClient(tb testing.TB, client *model.Client4)
 		Nickname:  "nn_" + id,
 		FirstName: "f_" + id,
 		LastName:  "l_" + id,
-		Password:  "Pa$$word11",
+		Password:  model.NewTestPassword(),
 	}
 
 	ruser, _, err := client.CreateUser(context.Background(), user)
 	require.NoError(tb, err)
 
-	ruser.Password = "Pa$$word11"
+	ruser.Password = user.Password
 	_, err = th.App.Srv().Store().User().VerifyEmail(ruser.Id, ruser.Email)
 	if err != nil {
 		return nil
@@ -723,11 +750,12 @@ func (th *TestHelper) CreateGuestAndClient(tb testing.TB) (*model.User, *model.C
 	id := model.NewId()
 
 	// create a guest user and add it to the basic team and public/private channels
+	password := model.NewTestPassword()
 	guest, cgErr := th.App.CreateGuest(th.Context, &model.User{
 		Email:         "test_guest" + id + "@sample.com",
 		Username:      "guest_" + id,
 		Nickname:      "guest_" + id,
-		Password:      "Password1",
+		Password:      password,
 		EmailVerified: true,
 	})
 	require.Nil(tb, cgErr)
@@ -739,9 +767,10 @@ func (th *TestHelper) CreateGuestAndClient(tb testing.TB) (*model.User, *model.C
 
 	// create a client and login the guest
 	guestClient := th.CreateClient()
-	_, _, err := guestClient.Login(context.Background(), guest.Email, "Password1")
+	_, _, err := guestClient.Login(context.Background(), guest.Email, password)
 	require.NoError(tb, err)
 
+	guest.Password = password
 	return guest, guestClient
 }
 
@@ -753,7 +782,7 @@ func (th *TestHelper) SetupLdapConfig() {
 		*cfg.LdapSettings.LdapServer = "dockerhost"
 		*cfg.LdapSettings.BaseDN = "dc=mm,dc=test,dc=com"
 		*cfg.LdapSettings.BindUsername = "cn=admin,dc=mm,dc=test,dc=com"
-		*cfg.LdapSettings.BindPassword = "mostest"
+		*cfg.LdapSettings.BindPassword = "mostest_password"
 		*cfg.LdapSettings.FirstNameAttribute = "cn"
 		*cfg.LdapSettings.LastNameAttribute = "sn"
 		*cfg.LdapSettings.NicknameAttribute = "cn"
@@ -918,7 +947,7 @@ func (th *TestHelper) CreateDmChannel(tb testing.TB, user *model.User) *model.Ch
 func (th *TestHelper) PatchChannelModerationsForMembers(tb testing.TB, channelId, name string, val bool) {
 	patch := []*model.ChannelModerationPatch{{
 		Name:  &name,
-		Roles: &model.ChannelModeratedRolesPatch{Members: model.NewPointer(val)},
+		Roles: &model.ChannelModeratedRolesPatch{Members: new(val)},
 	}}
 
 	channel, err := th.App.GetChannel(th.Context, channelId)
@@ -1009,10 +1038,10 @@ func (th *TestHelper) GenerateTestEmail() string {
 func (th *TestHelper) CreateGroup(tb testing.TB) *model.Group {
 	id := model.NewId()
 	group := &model.Group{
-		Name:        model.NewPointer("n-" + id),
+		Name:        new("n-" + id),
 		DisplayName: "dn_" + id,
 		Source:      model.GroupSourceLdap,
-		RemoteId:    model.NewPointer("ri_" + model.NewId()),
+		RemoteId:    new("ri_" + model.NewId()),
 	}
 
 	group, err := th.App.CreateGroup(group)
@@ -1060,6 +1089,23 @@ func (th *TestHelper) TestForAllClients(t *testing.T, f func(*testing.T, *model.
 	})
 }
 
+// TestForRegularAndSystemAdminClients runs a test function for regular and system admin the clients
+// registered in the TestHelper
+func (th *TestHelper) TestForRegularAndSystemAdminClients(t *testing.T, f func(*testing.T, *model.Client4), name ...string) {
+	var testName string
+	if len(name) > 0 {
+		testName = name[0] + "/"
+	}
+
+	t.Run(testName+"Client", func(t *testing.T) {
+		f(t, th.Client)
+	})
+
+	t.Run(testName+"SystemAdminClient", func(t *testing.T) {
+		f(t, th.SystemAdminClient)
+	})
+}
+
 func GenerateTestUsername() string {
 	return "fakeuser" + model.NewRandomString(10)
 }
@@ -1083,9 +1129,9 @@ func GenerateTestID() string {
 func CheckUserSanitization(tb testing.TB, user *model.User) {
 	tb.Helper()
 
-	require.Equal(tb, "", user.Password, "password wasn't blank")
+	require.Empty(tb, user.Password, "password wasn't blank")
 	require.Empty(tb, user.AuthData, "auth data wasn't blank")
-	require.Equal(tb, "", user.MfaSecret, "mfa secret wasn't blank")
+	require.Empty(tb, user.MfaSecret, "mfa secret wasn't blank")
 }
 
 func CheckEtag(tb testing.TB, data any, resp *model.Response) {
@@ -1369,6 +1415,85 @@ func (th *TestHelper) SetupScheme(tb testing.TB, scope string) *model.Scheme {
 	return scheme
 }
 
+func (th *TestHelper) SetUserRemoteID(tb testing.TB, userID, remoteID string) *model.User {
+	tb.Helper()
+
+	query, args, err := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
+		Update("Users").
+		Set("RemoteId", remoteID).
+		Where(sq.Eq{"Id": userID}).
+		ToSql()
+	require.NoError(tb, err)
+
+	_, err = th.App.Srv().Store().GetInternalMasterDB().Exec(query, args...)
+	require.NoError(tb, err)
+
+	th.App.InvalidateCacheForUser(userID)
+	user, appErr := th.App.GetUser(th.Context, userID)
+	require.Nil(tb, appErr)
+	return user
+}
+
 func (th *TestHelper) Parallel(t *testing.T) {
 	mainHelper.Parallel(t)
+}
+
+// AuditEntry represents a parsed audit log entry for testing
+type AuditEntry struct {
+	EventName  string
+	Status     string
+	UserID     string
+	SessionID  string
+	Parameters map[string]any
+	Raw        map[string]any
+}
+
+// FindAuditEntry searches audit log data for an entry matching the given event name
+// and optionally a user ID. Returns the first matching entry or nil if not found.
+func FindAuditEntry(data string, eventName string, userID string) *AuditEntry {
+	for line := range strings.SplitSeq(data, "\n") {
+		if line == "" {
+			continue
+		}
+		var entry map[string]any
+		if err := json.Unmarshal([]byte(line), &entry); err != nil {
+			continue
+		}
+
+		if entry["event_name"] != eventName {
+			continue
+		}
+
+		auditEntry := &AuditEntry{
+			EventName: eventName,
+			Raw:       entry,
+		}
+
+		if status, ok := entry["status"].(string); ok {
+			auditEntry.Status = status
+		}
+
+		if actor, ok := entry["actor"].(map[string]any); ok {
+			if uid, ok := actor["user_id"].(string); ok {
+				auditEntry.UserID = uid
+			}
+			if sid, ok := actor["session_id"].(string); ok {
+				auditEntry.SessionID = sid
+			}
+		}
+
+		if event, ok := entry["event"].(map[string]any); ok {
+			if params, ok := event["parameters"].(map[string]any); ok {
+				auditEntry.Parameters = params
+			}
+		}
+
+		// If userID filter is specified, check it matches
+		if userID != "" && auditEntry.UserID != userID {
+			continue
+		}
+
+		return auditEntry
+	}
+	return nil
 }

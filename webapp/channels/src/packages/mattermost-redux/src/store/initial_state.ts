@@ -9,6 +9,8 @@ const state: GlobalState = {
     entities: {
         agents: {
             agents: [],
+            llmServices: [],
+            agentsStatus: {available: false},
         },
         general: {
             config: {},
@@ -27,7 +29,6 @@ const state: GlobalState = {
             profiles: {},
             profilesInTeam: {},
             profilesNotInTeam: {},
-            profilesWithoutTeam: new Set(),
             profilesInChannel: {},
             profilesNotInChannel: {},
             profilesInGroup: {},
@@ -71,6 +72,12 @@ const state: GlobalState = {
             messageCounts: {},
             channelsMemberCount: {},
             restrictedDMs: {},
+            joinRequests: {
+                myPendingByChannel: {},
+                byChannel: {},
+                countsByChannel: {},
+                myList: [],
+            },
         },
         channelBookmarks: {
             byChannelId: {},
@@ -101,6 +108,12 @@ const state: GlobalState = {
             threads: {},
             counts: {},
             countsIncludingDirect: {},
+        },
+        recaps: {
+            byId: {},
+            allIds: [],
+            scheduledRecaps: {},
+            limitStatus: null,
         },
         preferences: {
             myPreferences: {},
@@ -142,12 +155,14 @@ const state: GlobalState = {
             appsBotIDs: [],
             appsOAuthAppIDs: [],
             dialogTriggerId: '',
+            dialogs: {},
             outgoingOAuthConnections: {},
         },
         files: {
             files: {},
             filesFromSearch: {},
             fileIdsByPostId: {},
+            rejectedFiles: new Set(),
         },
         emojis: {
             customEmoji: {},
@@ -181,6 +196,7 @@ const state: GlobalState = {
         channelCategories: {
             byId: {},
             orderByTeam: {},
+            managedCategoryMappings: {},
         },
         apps: {
             main: {
@@ -228,6 +244,20 @@ const state: GlobalState = {
             byChannelOrThreadId: {},
         },
         contentFlagging: {},
+        properties: {
+            fields: {byObjectType: {}, byId: {}},
+            values: {byTargetId: {}, byFieldId: {}},
+            groups: {byId: {}, byName: {}},
+        },
+        renderPermissions: {
+            byResource: {},
+            invalidatedAt: 0,
+            invalidatedAtByResource: {},
+        },
+        health: {
+            findings: {},
+            evaluatedAt: 0,
+        },
     },
     errors: [],
     requests: {

@@ -4,10 +4,11 @@
 import React from 'react';
 import {FormattedMessage, injectIntl, type IntlShape} from 'react-intl';
 
+import {WithTooltip} from '@mattermost/shared/components/tooltip';
+
 import KeyboardShortcutSequence, {
     KEYBOARD_SHORTCUTS,
 } from 'components/keyboard_shortcuts/keyboard_shortcuts_sequence';
-import WithTooltip from 'components/with_tooltip';
 
 import {RHSStates} from 'utils/constants';
 
@@ -142,7 +143,7 @@ class RhsCardHeader extends React.PureComponent<Props> {
                     {back}
                     <FormattedMessage
                         id='search_header.title5'
-                        defaultMessage='Extra information'
+                        defaultMessage='Extra Information'
                     />
                 </span>
                 <div className='pull-right'>
@@ -174,7 +175,7 @@ class RhsCardHeader extends React.PureComponent<Props> {
                         <button
                             type='button'
                             className='sidebar--right__close btn btn-icon btn-sm'
-                            aria-label='Close'
+                            aria-label={this.props.intl.formatMessage({id: 'generic.close', defaultMessage: 'Close'})}
                             onClick={this.props.actions.closeRightHandSide}
                         >
                             <i

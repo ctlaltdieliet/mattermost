@@ -3,7 +3,7 @@
 
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
-import React, {useState} from 'react';
+import React, {useState, type JSX} from 'react';
 import {FormattedMessage, useIntl} from 'react-intl';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -70,7 +70,7 @@ const CloudTrialBanner = ({trialEndDate}: Props): JSX.Element | null => {
             title={(
                 <FormattedMessage
                     id='admin.subscription.cloudTrialCard.upgradeTitle'
-                    defaultMessage='Upgrade to one of our paid plans to keep your workspace '
+                    defaultMessage='Upgrade to one of our paid plans to keep your workspace'
                 />
             )}
             message={(

@@ -330,7 +330,7 @@ describe('pasteHandler', () => {
                 clipboardData: tc.clipboardData,
             };
 
-            pasteHandler(event, location, '', tc.isNonFormattedPaste ?? false, 0);
+            pasteHandler(event, location, '', tc.isNonFormattedPaste ?? false);
 
             if (tc.isNonFormattedPaste) {
                 expect(execCommandInsertText).not.toHaveBeenCalled();
@@ -461,6 +461,19 @@ describe('createFileFromClipboardDataItem', () => {
 });
 
 describe('isKnownTargetForPaste', () => {
+    test('should return false for the rich text editor, which shares the same ids', () => {
+        expect(isKnownTargetForPaste(
+            {target: {id: 'post_textbox', isContentEditable: true}} as unknown as ClipboardEvent,
+            Locations.CENTER,
+        )).toBe(false);
+
+        expect(isKnownTargetForPaste(
+            {target: {id: 'edit_textbox', isContentEditable: true}} as unknown as ClipboardEvent,
+            Locations.CENTER,
+            true,
+        )).toBe(false);
+    });
+
     test('editing mode should return true only for edit_textbox', () => {
         expect(isKnownTargetForPaste(
             {target: {id: 'edit_textbox'}} as unknown as ClipboardEvent,

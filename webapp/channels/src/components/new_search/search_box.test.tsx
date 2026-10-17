@@ -8,7 +8,6 @@ import type {Team} from '@mattermost/types/teams';
 import {
     renderWithContext,
     screen,
-    fireEvent,
     userEvent,
 } from 'tests/react_testing_utils';
 
@@ -25,6 +24,8 @@ describe('components/new_search/SearchBox', () => {
         myTeams: [{id: 'team1', name: 'team1', display_name: 'Team 1', description: ''}] as Team[],
     };
 
+    const fileSearchEnabledState = {entities: {general: {config: {EnableFileAttachments: 'true', EnableFileSearch: 'true'}}}};
+
     test('should have the focus on the input field', () => {
         renderWithContext(<SearchBox {...baseProps}/>);
         expect(screen.getByPlaceholderText('Search messages')).toBeInTheDocument();
@@ -38,41 +39,45 @@ describe('components/new_search/SearchBox', () => {
     });
 
     test('should have the focus on the input field after switching search type', async () => {
-        renderWithContext(<SearchBox {...baseProps}/>);
+        renderWithContext(<SearchBox {...baseProps}/>, fileSearchEnabledState);
         await userEvent.click(screen.getByText('Files'));
         expect(screen.getByPlaceholderText('Search files')).toHaveFocus();
     });
 
     test('should see files hints when i click on files', async () => {
-        renderWithContext(<SearchBox {...baseProps}/>);
+        renderWithContext(<SearchBox {...baseProps}/>, fileSearchEnabledState);
         expect(screen.getByText('From:')).toBeInTheDocument();
         expect(screen.queryByText('Ext:')).not.toBeInTheDocument();
         await userEvent.click(screen.getByText('Files'));
         expect(screen.getByText('Ext:')).toBeInTheDocument();
     });
 
-    test('should call close on esc keydown', () => {
+    test('should call close on esc keydown', async () => {
         renderWithContext(<SearchBox {...baseProps}/>);
-        fireEvent.keyDown(screen.getByPlaceholderText('Search messages'), {key: 'Escape', code: 'Escape'});
+        const input = screen.getByPlaceholderText('Search messages');
+        input.focus();
+        await userEvent.keyboard('{Escape}');
         expect(baseProps.onClose).toHaveBeenCalledTimes(1);
     });
 
-    test('should call search on enter keydown', () => {
+    test('should call search on enter keydown', async () => {
         renderWithContext(<SearchBox {...baseProps}/>);
-        fireEvent.keyDown(screen.getByPlaceholderText('Search messages'), {key: 'Enter', code: 'Enter'});
+        const input = screen.getByPlaceholderText('Search messages');
+        input.focus();
+        await userEvent.keyboard('{Enter}');
         expect(baseProps.onSearch).toHaveBeenCalledTimes(1);
     });
 
     test('should be able to select with the up and down arrows', async () => {
-        renderWithContext(<SearchBox {...baseProps}/>);
+        renderWithContext(<SearchBox {...baseProps}/>, fileSearchEnabledState);
         await userEvent.click(screen.getByText('Files'));
-        fireEvent.change(screen.getByPlaceholderText('Search files'), {target: {value: 'ext:'}});
+        await userEvent.type(screen.getByPlaceholderText('Search files'), 'ext:');
         expect(screen.getByText('Text file')).toHaveClass('selected');
         expect(screen.getByText('Word Document')).not.toHaveClass('selected');
-        fireEvent.keyDown(screen.getByPlaceholderText('Search files'), {key: 'ArrowDown', code: 'ArrowDown'});
+        await userEvent.keyboard('{ArrowDown}');
         expect(screen.getByText('Text file')).not.toHaveClass('selected');
         expect(screen.getByText('Word Document')).toHaveClass('selected');
-        fireEvent.keyDown(screen.getByPlaceholderText('Search files'), {key: 'ArrowUp', code: 'ArrowUp'});
+        await userEvent.keyboard('{ArrowUp}');
         expect(screen.getByText('Text file')).toHaveClass('selected');
         expect(screen.getByText('Word Document')).not.toHaveClass('selected');
     });

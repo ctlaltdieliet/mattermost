@@ -62,6 +62,11 @@ func SetFormat(t string) {
 	printer.Format = t
 }
 
+// GetFormat returns the format for the final output of the printer
+func GetFormat() string {
+	return printer.Format
+}
+
 func SetCommand(cmd *cobra.Command) {
 	printer.cmd = cmd
 }
@@ -256,7 +261,7 @@ func PrintWarning(msg string) {
 	if printer.Quiet {
 		return
 	}
-	fmt.Fprintf(printer.eWriter, "%s\n", color.YellowString("WARNING: %s", msg))
+	fmt.Fprintf(printer.eWriter, "%s\n", color.YellowString("WARNING: %s", SanitizeForTerminal(msg)))
 }
 
 func (p Printer) linesToBytes(opts printOpts) (b []byte, err error) {
@@ -273,7 +278,10 @@ func (p Printer) linesToBytes(opts printOpts) (b []byte, err error) {
 	case FormatPlain:
 		var buf bytes.Buffer
 		for i := range p.Lines {
-			fmt.Fprintf(&buf, "%s%s", p.Lines[i], newline)
+			// Sanitize output to prevent terminal escape injection attacks
+			// when writing user-controlled content to the terminal
+			line := fmt.Sprintf("%s", p.Lines[i])
+			fmt.Fprintf(&buf, "%s%s", SanitizeForTerminal(line), newline)
 		}
 		b = buf.Bytes()
 	case FormatJSON:
@@ -320,6 +328,6 @@ func (p Printer) printBytes(b []byte, opts printOpts) error {
 
 func (p Printer) printErrors() {
 	for i := range printer.ErrorLines {
-		fmt.Fprintln(printer.eWriter, printer.ErrorLines[i])
+		fmt.Fprintln(printer.eWriter, SanitizeForTerminal(printer.ErrorLines[i]))
 	}
 }

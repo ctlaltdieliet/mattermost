@@ -4,7 +4,8 @@
 import React, {useCallback, useState} from 'react';
 import {FormattedMessage} from 'react-intl';
 
-import type {PreferencesType, PreferenceType} from '@mattermost/types/preferences';
+import {Radio} from '@mattermost/compass-ui/components/radio';
+import type {PreferenceType} from '@mattermost/types/preferences';
 import type {UserProfile} from '@mattermost/types/users';
 
 import {Preferences} from 'mattermost-redux/constants';
@@ -18,14 +19,12 @@ export type Actions = {
 export type OwnProps = {
     user: UserProfile;
     updateSection: (section: string) => void;
-    adminMode?: boolean;
-    userPreferences?: PreferencesType;
-}
+};
 
 type Props = OwnProps & {
     renderEmoticonsAsEmoji: string;
     actions: Actions;
-}
+};
 
 const RenderEmoticonsAsEmoji: React.FC<Props> = ({user, renderEmoticonsAsEmoji, updateSection, actions}) => {
     const [value, setValue] = useState<string>(renderEmoticonsAsEmoji);
@@ -80,34 +79,27 @@ const RenderEmoticonsAsEmoji: React.FC<Props> = ({user, renderEmoticonsAsEmoji, 
                     defaultMessage='Render emoticons as emojis'
                 />
             </legend>
-            {options.map(({option, inputId, messageId, defaultMessage}) => {
-                return (
-                    <div
-                        className='radio'
+            <div className='settings-radio-group'>
+                {options.map(({option, inputId, messageId, defaultMessage}) => (
+                    <Radio
                         key={option}
+                        id={inputId}
+                        name='renderEmoticonsAsEmoji'
+                        value={option}
+                        checked={value === option}
+                        onChange={handleChange}
                     >
-                        <label>
-                            <input
-                                id={inputId}
-                                type='radio'
-                                name='renderEmoticonsAsEmoji'
-                                value={option}
-                                checked={value === option}
-                                onChange={handleChange}
-                            />
-                            <FormattedMessage
-                                id={messageId}
-                                defaultMessage={defaultMessage}
-                            />
-                        </label>
-                        <br/>
-                    </div>
-                );
-            })}
+                        <FormattedMessage
+                            id={messageId}
+                            defaultMessage={defaultMessage}
+                        />
+                    </Radio>
+                ))}
+            </div>
             <div className='mt-5'>
                 <FormattedMessage
                     id='user.settings.display.renderEmoticonsAsEmojiDesc'
-                    defaultMessage='When enabled, text emoticons in messages will be rendered as emojis (For example :D as 😄)'
+                    defaultMessage='When enabled, text emoticons in messages will automatically be rendered as emojis (For example :D as 😄)'
                 />
             </div>
         </fieldset>
